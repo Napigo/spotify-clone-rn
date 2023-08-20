@@ -1,0 +1,40 @@
+import React, { useMemo } from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { AppStackParamList } from "./types";
+import { useThemeColors } from "../theme/ThemeProvider";
+import { NavigationContainer, Theme } from "@react-navigation/native";
+import { LoginView } from "../views/Login";
+
+const AppStack = createNativeStackNavigator<AppStackParamList>();
+
+export const AppNavigation: React.FC = () => {
+  const { scheme } = useThemeColors();
+
+  const appTheme = useMemo(() => {
+    const themes: Theme = {
+      dark: true,
+      colors: {
+        primary: scheme.primary[500],
+        background: scheme.systemBackground,
+        card: scheme.systemGray,
+        text: scheme.systemTint,
+        border: scheme.systemGray,
+        notification: scheme.systemGray,
+      },
+    };
+    return themes;
+  }, [scheme]);
+
+  return (
+    <NavigationContainer theme={appTheme}>
+      <AppStack.Navigator
+        initialRouteName="Auth"
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <AppStack.Screen name="Auth" component={LoginView} />
+      </AppStack.Navigator>
+    </NavigationContainer>
+  );
+};

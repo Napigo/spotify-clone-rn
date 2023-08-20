@@ -1,20 +1,16 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { ThemeContextProvider } from "./src/theme/ThemeProvider";
+import { Provider } from "react-redux";
+import { AppStore } from "./src/redux/app-store";
+import { AppNavigation } from "./src/navigations/AppNavigation";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Spotify Clone</Text>
+    <ThemeContextProvider>
       <StatusBar style="auto" />
-    </View>
+      <Provider store={AppStore}>
+        <AppNavigation />
+      </Provider>
+    </ThemeContextProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
