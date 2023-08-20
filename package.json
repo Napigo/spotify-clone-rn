@@ -4,9 +4,13 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
+    "android": "expo run:android",
+    "clean-start": "npx expo start -c",
+    "ios": "expo run:ios",
+    "ios:no-cache": "npx expo run:ios --no-build-cache",
+    "web": "expo start --web",
+    "dev-client": "expo start --dev-client",
+    "clean": "expo r -c"
   },
   "dependencies": {
     "expo": "~49.0.7",
