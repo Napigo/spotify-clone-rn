@@ -1,23 +1,42 @@
 import React from "react";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { UIButton } from "../../components/common/UIButton";
+import { WhiteLogo } from "../../components/svgs/WhiteLogo";
+import { UIText } from "../../components/common/UIText";
+import { SCREEN_HEIGHT } from "../../theme/constants";
 
 export const LoginView: React.FC = () => {
+  const styles = useStyles();
+
   return (
     <View
       style={{
         display: "flex",
+        flexDirection: "column",
         flex: 1,
         height: "100%",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "flex-end",
         paddingHorizontal: 20,
-        gap: 10,
+        gap: 50,
+        paddingBottom: SCREEN_HEIGHT * 0.2,
       }}
     >
-      <UIButton text="Sign up for free" />
-      <UIButton variant="base-outlined" text="Sign up with Google" />
-      <UIButton variant="base-outlined" text="Sign up with facebook" />
+      <WhiteLogo />
+      <UIText level="title1" style={styles.title}>
+        Millions of Songs. Free on Spotify.
+      </UIText>
+      <UIButton text="Login Spotify" />
     </View>
   );
+};
+
+const useStyles = () => {
+  return StyleSheet.create({
+    title: {
+      textAlign: "center",
+      fontWeight: "700",
+      paddingHorizontal: 50,
+    },
+  });
 };
