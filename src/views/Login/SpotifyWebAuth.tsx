@@ -10,11 +10,12 @@ import { isEmpty } from "lodash";
 import { save } from "../../modules/secure-storage";
 import { AppStackParamList } from "../../navigations/types";
 
+let redirectCall = 1;
+
 export const SpotifyWebAuthview: React.FC = () => {
   const styles = useStyles();
   const { navigate, goBack } =
     useNavigation<NavigationProp<AppStackParamList>>();
-  const [accessTokenTemp, setAccessTokenTemp] = useState<string>();
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -25,20 +26,23 @@ export const SpotifyWebAuthview: React.FC = () => {
       </View>
       <WebView
         source={{ uri: createAuthorizationURL() }}
-        onNavigationStateChange={async ({ url }) => {
+        onNavigationStateChange={async ({ url, loading }) => {
           /**
-           * why storing this in temp useState, because onNavigationStateChange somehow execute the same callback uri
-           * 2 times, we need to check weather have we gotten the token or not, if yes.. dont  bother
-           * handling it again
+           * Why use redirectCall count??, due to that the onNavigationStateChange is calling multipel times, for
+           * some unknown reason, meaning, handleAuthRedirect will invoke double, even after token is returned,
+           * so to prevent from double calling, we check on counter, to make sure, the logic only run once...
            */
-          if (isEmpty(accessTokenTemp)) {
+          if (
+            redirectCall > 0 &&
+            !loading &&
+            url.includes("http://www.napigo.co/?code")
+          ) {
             let result = await handleAuthRedirect(url);
             if (result) {
-              console.log(result);
-              setAccessTokenTemp(accessTokenTemp);
               save("access_token", result.access_token);
               save("expires_in", result.expires_in);
               navigate("SessionLoader");
+              redirectCall = 0;
             }
           }
         }}

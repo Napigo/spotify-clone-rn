@@ -39,47 +39,44 @@ export function isRedirectCallback(url: string) {
 export async function handleAuthRedirect(
   url: string
 ): Promise<AccessTokenResponse | void> {
-  if (url.includes("http://www.napigo.co/?code")) {
-    return new Promise((resolve, reject) => {
-      const parsedUrl = queryString.parseUrl(url);
-      const query = parsedUrl.query;
-      if ("code" in query) {
-        const { code } = query;
-        if (code) {
-          const authHeader = {
-            Authorization:
-              "Basic " +
-              new Buffer.from(
-                process.env.EXPO_PUBLIC_SPOTIFY_CLIENT_ID +
-                  ":" +
-                  process.env.EXPO_PUBLIC_SPOTIFY_CLIENT_SECRET
-              ).toString("base64"),
-          };
-          const redirectUri = "http://www.napigo.co";
-          axios({
-            url: "https://accounts.spotify.com/api/token",
-            method: "POST",
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-              ...authHeader,
-            },
-            data: {
-              grant_type: "client_credentials",
-              code: code as string,
-              redirect_uri: redirectUri,
-            },
+  return new Promise((resolve, reject) => {
+    const parsedUrl = queryString.parseUrl(url);
+    const query = parsedUrl.query;
+    if ("code" in query) {
+      const { code } = query;
+      if (code) {
+        const authHeader = {
+          Authorization:
+            "Basic " +
+            new Buffer.from(
+              process.env.EXPO_PUBLIC_SPOTIFY_CLIENT_ID +
+                ":" +
+                process.env.EXPO_PUBLIC_SPOTIFY_CLIENT_SECRET
+            ).toString("base64"),
+        };
+        const redirectUri = "http://www.napigo.co";
+        axios({
+          url: "https://accounts.spotify.com/api/token",
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            ...authHeader,
+          },
+          data: {
+            grant_type: "client_credentials",
+            code: code as string,
+            redirect_uri: redirectUri,
+          },
+        })
+          .then((result) => {
+            resolve(result.data as AccessTokenResponse);
           })
-            .then((result) => {
-              resolve(result.data as AccessTokenResponse);
-            })
-            .catch((err: AxiosError) => {
-              reject(err.response?.data);
-            });
-        }
+          .catch((err: AxiosError) => {
+            reject(err.response?.data);
+          });
       }
-    });
-  }
-  return Promise.resolve();
+    }
+  });
 }
 
 export async function exchangeForAccessToken() {}
