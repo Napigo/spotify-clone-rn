@@ -60,7 +60,6 @@ export const UIButton: React.FC<UIButtonProps> = ({
 
   return (
     <UIPressable
-      {...pressableProps}
       disabled={disabled}
       onFocusStyle={buttonStyles.focused}
       style={[
@@ -69,6 +68,7 @@ export const UIButton: React.FC<UIButtonProps> = ({
         styles[size],
         block && styles.block,
       ]}
+      {...pressableProps}
     >
       <UIText style={[styles.text, buttonStyles.text]}>{text}</UIText>
     </UIPressable>

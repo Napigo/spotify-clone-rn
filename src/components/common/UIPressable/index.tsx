@@ -57,7 +57,7 @@ export const UIPressable: React.FC<UIPressableProps> = ({
         onTouchEnd: () => {},
       };
     }
-  }, [clickableOnScrolling, setFocused, setOnPressed, onPress]);
+  }, [clickableOnScrolling, pressed, setFocused, setOnPressed, onPress]);
 
   return (
     <Pressable

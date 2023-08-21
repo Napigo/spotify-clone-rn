@@ -26,7 +26,12 @@ export const LoginView: React.FC = () => {
       <UIText level="title1" style={styles.title}>
         Millions of Songs. Free on Spotify.
       </UIText>
-      <UIButton text="Login Spotify" />
+      <UIButton
+        text="Login Spotify"
+        onPress={() => {
+          console.log("Napiho");
+        }}
+      />
     </View>
   );
 };
