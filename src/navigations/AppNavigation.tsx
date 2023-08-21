@@ -4,6 +4,7 @@ import { AppStackParamList } from "./types";
 import { useThemeColors } from "../theme/ThemeProvider";
 import { NavigationContainer, Theme } from "@react-navigation/native";
 import { LoginView } from "../views/Login";
+import { SpotifyWebAuthview } from "../views/Login/SpotifyWebAuth";
 
 const AppStack = createNativeStackNavigator<AppStackParamList>();
 
@@ -34,6 +35,11 @@ export const AppNavigation: React.FC = () => {
         }}
       >
         <AppStack.Screen name="Auth" component={LoginView} />
+        <AppStack.Screen
+          name="SpotifyWebAuth"
+          component={SpotifyWebAuthview}
+          options={{ animation: "slide_from_bottom" }}
+        />
       </AppStack.Navigator>
     </NavigationContainer>
   );

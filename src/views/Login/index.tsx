@@ -4,9 +4,13 @@ import { UIButton } from "../../components/common/UIButton";
 import { WhiteLogo } from "../../components/svgs/WhiteLogo";
 import { UIText } from "../../components/common/UIText";
 import { SCREEN_HEIGHT } from "../../theme/constants";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { AppStackParamList } from "../../navigations/types";
 
 export const LoginView: React.FC = () => {
   const styles = useStyles();
+
+  const { navigate } = useNavigation<NavigationProp<AppStackParamList>>();
 
   return (
     <View
@@ -29,7 +33,10 @@ export const LoginView: React.FC = () => {
       <UIButton
         text="Login Spotify"
         onPress={() => {
-          console.log("Napiho");
+          /**
+           * Handle Spotify Login
+           */
+          navigate("SpotifyWebAuth");
         }}
       />
     </View>
