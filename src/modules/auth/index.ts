@@ -4,12 +4,12 @@ import base64 from "react-native-base64";
 
 const Buffer = require("buffer").Buffer;
 
-type AccessTokenResponse = {
+export type AccessTokenResponse = {
   access_token: string;
   token_type: string;
-  scope: string;
+  scope?: string;
   expires_in: number;
-  refresh_token: string;
+  refresh_token?: string;
 };
 /**
  *
@@ -36,7 +36,9 @@ export function isRedirectCallback(url: string) {
  * http://www.napigo.co/?code=AQAXWmg_D6rwC30BVMaUTv7LN61VfjNISkz861RLhF0e8lYm01BkIUjjUpNpI9r0alj0bAEYdJt5iDMDJ-KsNwjwnOJ7Zu7wyL5OBu2sTPYvYY8oeF2tq0Inso5gOd09uYiHFCnnkVc7Rz5uCQORwniQ1y_pXBzXEOrQ3kcAAWoJNo9fP5ZvHNca8GQR-TJPQn0DQxlbTizmtWVN
  * @param url
  */
-export async function handleAuthRedirect(url: string): Promise<object | void> {
+export async function handleAuthRedirect(
+  url: string
+): Promise<AccessTokenResponse | void> {
   if (url.includes("http://www.napigo.co/?code")) {
     return new Promise((resolve, reject) => {
       const parsedUrl = queryString.parseUrl(url);
@@ -68,7 +70,7 @@ export async function handleAuthRedirect(url: string): Promise<object | void> {
             },
           })
             .then((result) => {
-              resolve(result.data);
+              resolve(result.data as AccessTokenResponse);
             })
             .catch((err: AxiosError) => {
               reject(err.response?.data);

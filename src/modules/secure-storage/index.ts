@@ -40,3 +40,7 @@ export async function get(key: string): Promise<any> {
   }
   return null;
 }
+
+export async function remove(key: string): Promise<any> {
+  await SecureStore.deleteItemAsync(key);
+}

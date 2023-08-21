@@ -33,9 +33,6 @@ export const LoginView: React.FC = () => {
       <UIButton
         text="Login Spotify"
         onPress={() => {
-          /**
-           * Handle Spotify Login
-           */
           navigate("SpotifyWebAuth");
         }}
       />

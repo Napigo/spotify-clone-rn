@@ -5,6 +5,7 @@ import { useThemeColors } from "../theme/ThemeProvider";
 import { NavigationContainer, Theme } from "@react-navigation/native";
 import { LoginView } from "../views/Login";
 import { SpotifyWebAuthview } from "../views/Login/SpotifyWebAuth";
+import { SessionLoaderView } from "../views/Login/SessionLoader";
 
 const AppStack = createNativeStackNavigator<AppStackParamList>();
 
@@ -40,6 +41,7 @@ export const AppNavigation: React.FC = () => {
           component={SpotifyWebAuthview}
           options={{ animation: "slide_from_bottom" }}
         />
+        <AppStack.Screen name="SessionLoader" component={SessionLoaderView} />
       </AppStack.Navigator>
     </NavigationContainer>
   );
