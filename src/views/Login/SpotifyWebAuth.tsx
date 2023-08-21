@@ -41,6 +41,7 @@ export const SpotifyWebAuthview: React.FC = () => {
             if (result) {
               save("access_token", result.access_token);
               save("expires_in", result.expires_in);
+              save("refresh_token", result.refresh_token);
               navigate("SessionLoader");
               redirectCall = 0;
             }
