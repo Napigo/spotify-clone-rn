@@ -1,6 +1,7 @@
 export interface UISchemeColor {
   primary: string;
   systemBackground: string;
+  secondaryBackground: string;
   systemTint: string;
   systemGray: string;
   systemGray2: string;
@@ -13,6 +14,7 @@ export interface UISchemeColor {
 
 export const appSchemeColor: UISchemeColor = {
   primary: "#1ED760",
+  secondaryBackground: "#292929",
   systemBackground: "#121212",
   systemTint: "#ffffff",
   systemGray: "#8E8E93",
