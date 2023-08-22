@@ -6,16 +6,16 @@ import MDIcons from "@expo/vector-icons/MaterialIcons";
 import { UIPressable } from "../../components/common/UIPressable";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { createAuthorizationURL, handleAuthRedirect } from "../../modules/auth";
-import { isEmpty } from "lodash";
-import { save } from "../../modules/secure-storage";
-import { AppStackParamList } from "../../navigations/types";
-
-let redirectCall = 1;
+import { AuthStackParamList } from "../../navigations/types";
+import { useAuth } from "../../containers/App";
 
 export const SpotifyWebAuthview: React.FC = () => {
   const styles = useStyles();
-  const { navigate, goBack } =
-    useNavigation<NavigationProp<AppStackParamList>>();
+  const { setupSession } = useAuth();
+
+  let redirectCall = 1;
+
+  const { goBack } = useNavigation<NavigationProp<AuthStackParamList>>();
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -37,12 +37,22 @@ export const SpotifyWebAuthview: React.FC = () => {
             !loading &&
             url.includes("http://www.napigo.co/?code")
           ) {
-            let result = await handleAuthRedirect(url);
+            var result = await handleAuthRedirect(url);
             if (result) {
-              save("access_token", result.access_token);
-              save("expires_in", result.expires_in);
-              save("refresh_token", result.refresh_token);
-              navigate("SessionLoader");
+              goBack();
+
+              setTimeout(
+                (result) => {
+                  setupSession(
+                    result.access_token,
+                    result.refresh_token as string,
+                    result.expires_in
+                  );
+                },
+                500,
+                result
+              );
+
               redirectCall = 0;
             }
           }

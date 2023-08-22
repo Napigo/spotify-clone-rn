@@ -5,12 +5,12 @@ import { WhiteLogo } from "../../components/svgs/WhiteLogo";
 import { UIText } from "../../components/common/UIText";
 import { SCREEN_HEIGHT } from "../../theme/constants";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { AppStackParamList } from "../../navigations/types";
+import { AuthStackParamList } from "../../navigations/types";
 
 export const LoginView: React.FC = () => {
   const styles = useStyles();
 
-  const { navigate } = useNavigation<NavigationProp<AppStackParamList>>();
+  const { navigate } = useNavigation<NavigationProp<AuthStackParamList>>();
 
   return (
     <View

@@ -1,10 +1,8 @@
 import { ParamListBase } from "@react-navigation/native";
 
-export type AppStackParamList = {
+export type AuthStackParamList = {
   Auth: undefined;
   SpotifyWebAuth: undefined;
-  SessionLoader: undefined;
-  Core: SubNavigator<CoreStackParamList>;
 };
 
 export type CoreStackParamList = {
