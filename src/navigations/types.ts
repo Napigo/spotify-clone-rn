@@ -4,7 +4,19 @@ export type AppStackParamList = {
   Auth: undefined;
   SpotifyWebAuth: undefined;
   SessionLoader: undefined;
-  Core: undefined;
+  Core: SubNavigator<CoreStackParamList>;
+};
+
+export type CoreStackParamList = {
+  Tab: SubNavigator<TabStackParamList>;
+  Setting: undefined;
+  Profile: undefined;
+};
+
+export type TabStackParamList = {
+  Home: undefined;
+  Search: undefined;
+  Library: undefined;
 };
 
 /**

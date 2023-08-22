@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { SafeAreaView, StyleSheet, View } from "react-native";
 import WebView from "react-native-webview";
 import { useThemeColors } from "../../theme/ThemeProvider";
