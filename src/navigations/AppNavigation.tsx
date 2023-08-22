@@ -1,17 +1,25 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { AppStackParamList } from "./types";
 import { useThemeColors } from "../theme/ThemeProvider";
-import { NavigationContainer, Theme } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  NavigationProp,
+  Theme,
+  useNavigation,
+} from "@react-navigation/native";
 import { LoginView } from "../views/Login";
 import { SpotifyWebAuthview } from "../views/Login/SpotifyWebAuth";
 import { SessionLoaderView } from "../views/Login/SessionLoader";
 import { CoreNavigation } from "./CoreNavigation";
+import { get } from "../modules/secure-storage";
 
 const AppStack = createNativeStackNavigator<AppStackParamList>();
 
 export const AppNavigation: React.FC = () => {
   const { scheme } = useThemeColors();
+
+  const [isAuthenticated, setAuthenticated] = useState<boolean>(false);
 
   const appTheme = useMemo(() => {
     const themes: Theme = {
@@ -28,10 +36,19 @@ export const AppNavigation: React.FC = () => {
     return themes;
   }, [scheme]);
 
+  useEffect(() => {
+    get("access_token").then((result) => {
+      console.log(result);
+      if (result) {
+        setAuthenticated(true);
+      }
+    });
+  }, []);
+
   return (
     <NavigationContainer theme={appTheme}>
       <AppStack.Navigator
-        initialRouteName="Auth"
+        initialRouteName={"Core"}
         screenOptions={{
           headerShown: false,
         }}
