@@ -1,17 +1,16 @@
 import React from "react";
-import { SafeAreaView, StyleSheet, View } from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
 import { SCREEN_HEIGHT, STANDARD_TOPBAR_HEIGHT } from "../../theme/constants";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { HomeHeader } from "../../components/Home/HomeHeader";
 import { CategoryChips } from "../../components/Home/CategoryChips";
-import { useThemeColors } from "../../theme/ThemeProvider";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, {
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
-import { UIText } from "../../components/common/UIText";
+import { RecentTracks } from "../../components/Home/RecentTracks";
 
 export const HomeView: React.FC = () => {
   const height = useBottomTabBarHeight();
@@ -53,47 +52,7 @@ export const HomeView: React.FC = () => {
           <Animated.View style={[styles.sticky, stylez]}>
             <CategoryChips />
           </Animated.View>
-          <View style={{ paddingHorizontal: 20 }}>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-            <UIText level="title3">Hello</UIText>
-          </View>
+          <RecentTracks />
         </Animated.ScrollView>
       </SafeAreaView>
     </>
@@ -101,13 +60,8 @@ export const HomeView: React.FC = () => {
 };
 
 const useStyles = () => {
-  const { scheme } = useThemeColors();
-
   return StyleSheet.create({
     sticky: {
-      // position: "absolute",
-      // top: 0,
-      // left: 0,
       height: 60,
       backgroundColor: "",
     },
