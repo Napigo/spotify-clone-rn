@@ -85,7 +85,7 @@ export const AuthContainer: React.FC<PropsWithChildren> = ({ children }) => {
   );
 
   useEffect(() => {
-    get("access_token").then((result) => {
+    checkSession().then((result) => {
       if (result) {
         setAuthenticated(true);
       } else {
@@ -94,6 +94,16 @@ export const AuthContainer: React.FC<PropsWithChildren> = ({ children }) => {
       setIsReady(true);
     });
   }, []);
+
+  const checkSession = async () => {
+    const accessToken = await get("access_token");
+    const refreshToken = await get("refresh_token");
+
+    if (accessToken && refreshToken) {
+      return true;
+    }
+    return false;
+  };
 
   if (!appIsReady) {
     return null;

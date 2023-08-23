@@ -68,19 +68,31 @@ class ApiCaller {
           });
         });
       }
+      // console.log(isRefreshing);
 
       try {
-        const { access_token, refresh_token } = await refreshAccessToken();
-        //updating the new token into secure storage
-        save("access_token", access_token);
-        save("refresh_token", refresh_token);
+        // console.log("Trying to refresh access token");
+        // console.log(originalRequest);
+        isRefreshing = true;
+        // console.log(isRefreshing);
+        const result = await refreshAccessToken();
+        // console.log(result);
+        if (result) {
+          const { access_token, refresh_token } = result;
+          //updating the new token into secure storage
+          save("access_token", access_token);
+          save("refresh_token", refresh_token);
 
-        // retry all the original requests calling here
-        refreshSubscribers.forEach((subscriber) => subscriber(access_token));
-        refreshSubscribers = [];
+          // retry all the original requests calling here
+          refreshSubscribers.forEach((subscriber) => subscriber(access_token));
+          refreshSubscribers = [];
 
-        // also retry for the current request
-        originalRequest.headers.set("Authorization", `Bearer ${access_token}`);
+          // also retry for the current request
+          originalRequest.headers.set(
+            "Authorization",
+            `Bearer ${access_token}`
+          );
+        }
         return this.axiosInstance(originalRequest);
       } catch (refreshError) {
         return Promise.reject(refreshError);
