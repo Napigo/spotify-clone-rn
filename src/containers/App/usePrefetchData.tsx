@@ -11,7 +11,7 @@ import { recentTracksAction } from "../../redux/stores/recent-tracks.store";
  * app loaded and UI displayed
  * 1. ) New Releases
  */
-export const useFetchInitialData = () => {
+export const useFetchInitialData = (isAuthenticated: boolean) => {
   const [isDone, setDone] = useState<boolean>(false);
   const [errors, setErrors] = useState<Error[]>([]);
 
@@ -22,7 +22,7 @@ export const useFetchInitialData = () => {
     isLoading: newReleases_isLoading,
     error: newReleases_error,
   } = useQuery<NewReleaseResponse>(["new-releases"], {
-    queryFn: () => fetchNewRelease(),
+    queryFn: () => fetchNewRelease(5),
     staleTime: 60000,
     cacheTime: 60000,
     refetchOnMount: false,
@@ -31,22 +31,31 @@ export const useFetchInitialData = () => {
   });
 
   useEffect(() => {
-    if (!newReleases_isLoading && newReleases_response) {
-      const payloads = newReleases_response.albums.items.map((item) => ({
-        id: item.id,
-        images: item.images,
-        name: item.name,
-      }));
-      dispatch(recentTracksAction.load(payloads));
-      setDone(true);
+    console.log(isAuthenticated);
+    if (isAuthenticated) {
+      if (!newReleases_isLoading && newReleases_response) {
+        const payloads = newReleases_response.albums.items.map((item) => ({
+          id: item.id,
+          images: item.images,
+          name: item.name,
+        }));
+        dispatch(recentTracksAction.load(payloads));
+        setDone(true);
+      }
+      if (newReleases_error) {
+        errors.push(newReleases_error as Error);
+        setErrors([...errors]);
+      }
     }
-    if (newReleases_error) {
-      errors.push(newReleases_error as Error);
-      setErrors([...errors]);
-    }
-  }, [newReleases_response, newReleases_isLoading, newReleases_error]);
+  }, [
+    newReleases_response,
+    newReleases_isLoading,
+    newReleases_error,
+    isAuthenticated,
+  ]);
 
   return {
     isDone,
+    setDone,
   };
 };

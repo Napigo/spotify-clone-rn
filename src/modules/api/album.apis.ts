@@ -30,9 +30,9 @@ export interface IImage {
 /**
  *
  */
-export async function fetchNewRelease(): Promise<NewReleaseResponse> {
+export async function fetchNewRelease(limit = 20): Promise<NewReleaseResponse> {
   const response = await apis.callApi({
-    url: "v1/browse/new-releases",
+    url: `v1/browse/new-releases?limit=${limit}`,
     method: "get",
   });
   if (response.status === 200 && response.data) {

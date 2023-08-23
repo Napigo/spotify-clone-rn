@@ -23,7 +23,7 @@ class ApiCaller {
     });
     this.onError = this.onError.bind(this);
     this.handleApiRequest = this.handleApiRequest.bind(this);
-
+    this.cancelAll = this.cancelAll.bind(this);
     this.configureInterceptors();
   }
 
@@ -34,6 +34,8 @@ class ApiCaller {
       this.onError
     );
   }
+
+  cancelAll() {}
 
   async handleApiRequest(
     config: InternalAxiosRequestConfig

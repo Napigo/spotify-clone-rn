@@ -11,6 +11,7 @@ import { View } from "react-native";
 import { get, remove, save } from "../../modules/secure-storage";
 import { useThemeColors } from "../../theme/ThemeProvider";
 import { useFetchInitialData } from "./usePrefetchData";
+import { apis } from "../../modules/api";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -44,7 +45,8 @@ export const AuthContainer: React.FC<PropsWithChildren> = ({ children }) => {
    */
   const [appIsReady, setIsReady] = useState<boolean>(false);
 
-  const { isDone: isInitialDataFetchDone } = useFetchInitialData();
+  const { isDone: isInitialDataFetchDone, setDone } =
+    useFetchInitialData(isAuthenticated);
 
   const { scheme } = useThemeColors();
 
@@ -91,6 +93,7 @@ export const AuthContainer: React.FC<PropsWithChildren> = ({ children }) => {
       if (result) {
         setAuthenticated(true);
       } else {
+        setDone(true);
         setAuthenticated(false);
       }
       setIsReady(true);
