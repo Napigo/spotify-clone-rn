@@ -5,11 +5,14 @@ import { UIText } from "../../common/UIText";
 import { UIPressable } from "../../common/UIPressable";
 import { Ionicons } from "@expo/vector-icons";
 import { STANDARD_TOPBAR_HEIGHT } from "../../../theme/constants";
+import { useAuth } from "../../../containers/App";
 
 const ICON_SIZE = 26;
 
 export const HomeHeader: React.FC = () => {
   const styles = useStyles();
+
+  const { logout } = useAuth();
 
   const greeting = useMemo(() => {
     const currentTime = new Date();
@@ -30,7 +33,7 @@ export const HomeHeader: React.FC = () => {
         Good {greeting}
       </UIText>
       <View style={styles.controls}>
-        <UIPressable>
+        <UIPressable onPress={() => logout()}>
           <Ionicons
             name="notifications-outline"
             size={ICON_SIZE}

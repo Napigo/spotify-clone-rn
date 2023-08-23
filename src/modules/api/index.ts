@@ -15,10 +15,10 @@ class ApiCaller {
   constructor() {
     this.axiosInstance = axios.create({
       baseURL: process.env.EXPO_PUBLIC_SPOTIFY_BASE_URL ?? "",
-      timeout: 5000,
+      timeout: 10000,
       headers: {
         "Content-Type": "application/json",
-        Accept: "",
+        Accept: "application/json, text/plain, */*",
       },
     });
 
@@ -91,27 +91,12 @@ class ApiCaller {
     return Promise.reject(error);
   }
 
-  /**
-   * @TODO
-   * @returns
-   */
-  withAuthHeader() {
-    return {};
-  }
-
-  async call({
-    url = "",
-    method = "get",
-    params = {},
-    body = {},
-    withAuth = false,
-  }) {
+  async callApi({ url = "", method = "get", params = {}, body = {} }) {
     return await this.axiosInstance({
-      url,
+      url: url,
       method: method,
       params: params,
-      headers: withAuth ? this.withAuthHeader() : {},
-      data: { ...body },
+      data: method === "get" ? undefined : { ...body },
     });
   }
 }

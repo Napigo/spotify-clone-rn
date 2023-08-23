@@ -2,13 +2,32 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { RecentItem } from "./RecentItem";
 import { useAssets } from "expo-asset";
+import { useQuery } from "@tanstack/react-query";
+import {
+  NewReleaseResponse,
+  fetchNewRelease,
+} from "../../../modules/api/album.apis";
 
 export const RecentTracks: React.FC = () => {
   const styles = useStyles();
 
+  const {
+    data: response,
+    status,
+    isLoading,
+    error,
+  } = useQuery<NewReleaseResponse>(["new-releases"], {
+    queryFn: () => fetchNewRelease(),
+    keepPreviousData: true,
+    staleTime: 60000,
+    cacheTime: 60000,
+  });
+
   const [assets] = useAssets([
     require("../../../../assets/images/like-songs.png"),
   ]);
+
+  const isReady = Boolean(!isLoading && assets && assets.length > 0);
 
   return (
     <View style={styles.container}>
