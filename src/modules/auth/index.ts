@@ -75,11 +75,9 @@ export async function handleAuthRedirect(
   });
 }
 
-export async function refreshAccessToken(): Promise<{
-  access_token: string;
-  refresh_token: string;
-} | null> {
-  return new Promise((resolve) => {
+export async function refreshAccessToken(): Promise<string> {
+  console.log("refreshAccessToken");
+  return new Promise((resolve, reject) => {
     get("refresh_token").then((refreshToken) => {
       if (refreshToken) {
         axios({
@@ -95,19 +93,16 @@ export async function refreshAccessToken(): Promise<{
           },
         }).then((result) => {
           const { data } = result;
-          resolve({
-            access_token: data.access_token,
-            refresh_token: data.refresh_token,
-          });
+          resolve(data.access_token);
         });
+      } else {
+        reject(
+          new Error(
+            "Refresh token not avalable in secure storage, result : ",
+            refreshToken
+          )
+        );
       }
-      // ignore this call // lets think about this here, why should we ignore when refresh_token is not available?
-      // seems like this func is calling multiple times !!!!
-      /**
-       * @NOTED should not called multiple times, only onces per 401 error,
-       * please investigate why refreshAccessToken is called more than once
-       */
-      resolve(null);
     });
   });
 }

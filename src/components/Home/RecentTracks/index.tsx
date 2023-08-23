@@ -8,7 +8,7 @@ import {
   fetchNewRelease,
 } from "../../../modules/api/album.apis";
 
-export const RecentTracks: React.FC = () => {
+const Component: React.FC = () => {
   const styles = useStyles();
 
   const {
@@ -18,16 +18,19 @@ export const RecentTracks: React.FC = () => {
     error,
   } = useQuery<NewReleaseResponse>(["new-releases"], {
     queryFn: () => fetchNewRelease(),
-    keepPreviousData: true,
     staleTime: 60000,
     cacheTime: 60000,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    retry: true,
   });
 
+  console.log("DATA IS READY :", response);
   const [assets] = useAssets([
     require("../../../../assets/images/like-songs.png"),
   ]);
 
-  const isReady = Boolean(!isLoading && assets && assets.length > 0);
+  // const isReady = Boolean(!isLoading && assets && assets.length > 0);
 
   return (
     <View style={styles.container}>
@@ -108,3 +111,5 @@ const useStyles = () => {
     },
   });
 };
+
+export const RecentTracks = React.memo(Component);

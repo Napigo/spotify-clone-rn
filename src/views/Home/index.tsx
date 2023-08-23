@@ -4,7 +4,6 @@ import { SCREEN_HEIGHT, STANDARD_TOPBAR_HEIGHT } from "../../theme/constants";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { HomeHeader } from "../../components/Home/HomeHeader";
 import { CategoryChips } from "../../components/Home/CategoryChips";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, {
   useAnimatedScrollHandler,
   useAnimatedStyle,
@@ -14,8 +13,6 @@ import { RecentTracks } from "../../components/Home/RecentTracks";
 
 export const HomeView: React.FC = () => {
   const height = useBottomTabBarHeight();
-
-  const a = useSafeAreaInsets();
 
   const translationY = useSharedValue(0);
 

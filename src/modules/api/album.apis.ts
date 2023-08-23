@@ -34,7 +34,6 @@ export async function fetchNewRelease(): Promise<NewReleaseResponse> {
     url: "v1/browse/new-releases",
     method: "get",
   });
-
   if (response.status === 200 && response.data) {
     return response.data;
   } else {

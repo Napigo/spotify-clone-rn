@@ -6,11 +6,11 @@ import axios, {
 import { get, save } from "../secure-storage";
 import { refreshAccessToken } from "../auth";
 
-let isRefreshing = false;
 let refreshSubscribers: ((accessToken: string) => void)[] = [];
 
 class ApiCaller {
   axiosInstance: AxiosInstance;
+  private isRefreshing: boolean = false;
 
   constructor() {
     this.axiosInstance = axios.create({
@@ -21,6 +21,8 @@ class ApiCaller {
         Accept: "application/json, text/plain, */*",
       },
     });
+    this.onError = this.onError.bind(this);
+    this.handleApiRequest = this.handleApiRequest.bind(this);
 
     this.configureInterceptors();
   }
@@ -38,27 +40,27 @@ class ApiCaller {
   ): Promise<InternalAxiosRequestConfig> {
     const accessToken = await get("access_token");
     config.headers.set("Authorization", `Bearer ${accessToken}`);
+    console.log("Making a request", config.url);
     return config;
   }
 
-  /**
-   * Interceptors
-   */
   async onError(
     error: AxiosError
   ): Promise<AxiosError | InternalAxiosRequestConfig> {
-    /**
-     * We going to handle some middleware action when api error occurs here
-     */
-    const originalRequest = error.config as InternalAxiosRequestConfig;
+    return new Promise((resolve, reject) => {
+      if (error.response?.status === 401) {
+        const originalRequest = error.config as InternalAxiosRequestConfig;
 
-    if (error.response?.status === 401) {
-      if (isRefreshing) {
-        // during refreshing we register this failing calls into the queue,
-        // all in the queue are request objects which are waiting for the same new fresh token to be available
-        // once new token is refreshed and rehydrated, will iterate thru this refreshSubscribers list and
-        // run each callbacks registered
-        return new Promise((resolve) => {
+        console.log(
+          `REQUEST FAILED FOR ${originalRequest.url} with token of ${originalRequest.headers.Authorization}`
+        );
+
+        // Likely due to token expired
+        if (this.isRefreshing) {
+          console.log(
+            "REFRESHING IN PROGRESS : pushing this failed request to queue"
+          );
+
           refreshSubscribers.push((accessToken) => {
             originalRequest?.headers.set(
               "Authorization",
@@ -66,41 +68,40 @@ class ApiCaller {
             );
             resolve(this.axiosInstance(originalRequest));
           });
-        });
-      }
-      // console.log(isRefreshing);
+        } else {
+          this.isRefreshing = true;
 
-      try {
-        // console.log("Trying to refresh access token");
-        // console.log(originalRequest);
-        isRefreshing = true;
-        // console.log(isRefreshing);
-        const result = await refreshAccessToken();
-        // console.log(result);
-        if (result) {
-          const { access_token, refresh_token } = result;
-          //updating the new token into secure storage
-          save("access_token", access_token);
-          save("refresh_token", refresh_token);
+          console.log("PROCEEDING TO FETCH NEW TOKEN");
+          refreshAccessToken()
+            .then(async (accessToken) => {
+              console.log("NEW TOKEN", accessToken);
 
-          // retry all the original requests calling here
-          refreshSubscribers.forEach((subscriber) => subscriber(access_token));
-          refreshSubscribers = [];
+              await save("access_token", accessToken);
 
-          // also retry for the current request
-          originalRequest.headers.set(
-            "Authorization",
-            `Bearer ${access_token}`
-          );
+              console.log("SUCCESSFULLY RETRIEVE NEW TOKEN");
+
+              // retry all the previous failed request
+
+              refreshSubscribers.forEach((subscriber) =>
+                subscriber(accessToken)
+              );
+              refreshSubscribers = [];
+
+              originalRequest.headers.set(
+                "Authorization",
+                `Bearer ${accessToken}`
+              );
+              this.isRefreshing = false;
+              console.log("RETRYING ORIGINAL REQUEST");
+              resolve(this.axiosInstance(originalRequest));
+            })
+            .catch((err) => {
+              this.isRefreshing = false;
+              reject(err);
+            });
         }
-        return this.axiosInstance(originalRequest);
-      } catch (refreshError) {
-        return Promise.reject(refreshError);
-      } finally {
-        isRefreshing = false;
       }
-    }
-    return Promise.reject(error);
+    });
   }
 
   async callApi({ url = "", method = "get", params = {}, body = {} }) {
@@ -114,3 +115,65 @@ class ApiCaller {
 }
 
 export const apis = new ApiCaller();
+
+// /**
+//  * Interceptors
+//  */
+// async onError(
+//   error: AxiosError
+// ): Promise<AxiosError | InternalAxiosRequestConfig> {
+//   console.log("isRefreshing:", this.isRefreshing);
+//   /**
+//    * We going to handle some middleware action when api error occurs here
+//    */
+//   const originalRequest = error.config as InternalAxiosRequestConfig;
+
+//   if (error.response?.status === 401) {
+//     if (this.isRefreshing) {
+//       console.log("OPS WE ARE REFRESHING");
+//       // during refreshing we register this failing calls into the queue,
+//       // all in the queue are request objects which are waiting for the same new fresh token to be available
+//       // once new token is refreshed and rehydrated, will iterate thru this refreshSubscribers list and
+//       // run each callbacks registered
+//       return new Promise((resolve) => {
+//         refreshSubscribers.push((accessToken) => {
+//           originalRequest?.headers.set(
+//             "Authorization",
+//             `Bearer ${accessToken}`
+//           );
+//           resolve(this.axiosInstance(originalRequest)); // this is a retry
+//         });
+//       });
+//     }
+//     // console.log(isRefreshing);
+
+//     try {
+//       // console.log(originalRequest);
+//       this.isRefreshing = true;
+//       console.log("(Point A) isRefreshing set to ", this.isRefreshing);
+
+//       console.log("new  refresh token");
+//       const { access_token, refresh_token } = await refreshAccessToken();
+//       // console.log(result);
+//       //updating the new token into secure storage
+//       await save("access_token", access_token);
+//       await save("refresh_token", refresh_token);
+
+//       // retry all the original requests calling here
+
+//       console.log("Executing the old failed request : ", refreshSubscribers);
+//       refreshSubscribers.forEach((subscriber) => subscriber(access_token));
+//       refreshSubscribers = [];
+
+//       // also retry for the current request
+//       originalRequest.headers.set("Authorization", `Bearer ${access_token}`);
+//       console.log("retrying api call");
+//       this.isRefreshing = false;
+//       return this.axiosInstance(originalRequest);
+//     } catch (refreshError) {
+//       this.isRefreshing = false;
+//       return Promise.reject(refreshError);
+//     }
+//   }
+//   return Promise.reject(error);
+// }

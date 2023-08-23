@@ -99,6 +99,8 @@ export const AuthContainer: React.FC<PropsWithChildren> = ({ children }) => {
     const accessToken = await get("access_token");
     const refreshToken = await get("refresh_token");
 
+    console.log("checkSession, refreshToken", refreshToken);
+
     if (accessToken && refreshToken) {
       return true;
     }
