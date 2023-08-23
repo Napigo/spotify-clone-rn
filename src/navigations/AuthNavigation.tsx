@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { AuthStackParamList } from "./types";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { LoginView } from "../views/Login";
 import { SpotifyWebAuthview } from "../views/Login/SpotifyWebAuth";
+import * as SplashScreen from "expo-splash-screen";
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 
 export const AuthNavigation: React.FC = () => {
+  useEffect(() => {
+    console.log("AuthContainer rendered");
+    SplashScreen.hideAsync();
+  }, []);
+
   return (
     <AuthStack.Navigator
       initialRouteName="Auth"

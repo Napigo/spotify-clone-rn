@@ -5,7 +5,7 @@ import { UIText } from "../../common/UIText";
 import { UIPressable } from "../../common/UIPressable";
 import { Ionicons } from "@expo/vector-icons";
 import { STANDARD_TOPBAR_HEIGHT } from "../../../theme/constants";
-import { useAuth } from "../../../containers/App";
+import { useAuth } from "../../../containers/App/AuthContainer";
 
 const ICON_SIZE = 26;
 

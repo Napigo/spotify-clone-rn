@@ -29,7 +29,7 @@ const Component: React.FC = () => {
           ...data,
         ]
       : [];
-  }, [isReady, data]);
+  }, [isReady, data, assets]);
 
   return (
     <View style={styles.container}>
