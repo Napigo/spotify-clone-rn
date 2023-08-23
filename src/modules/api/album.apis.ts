@@ -2,17 +2,18 @@ import axios from "axios";
 import { get } from "../secure-storage";
 import { apis } from ".";
 
-export interface NewReleaseResponse extends AlbumMetadata {
-  items: ReleaseItem[];
+export interface NewReleaseResponse {
+  albums: AlbumPayload;
 }
 
-export interface AlbumMetadata {
+export interface AlbumPayload {
   href?: string;
   limit: number;
   next?: string;
   offset: number;
   previous?: string;
   total: number;
+  items: ReleaseItem[];
 }
 export interface ReleaseItem {
   id: string;

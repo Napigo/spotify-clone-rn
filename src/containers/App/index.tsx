@@ -10,6 +10,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { View } from "react-native";
 import { get, remove, save } from "../../modules/secure-storage";
 import { useThemeColors } from "../../theme/ThemeProvider";
+import { useFetchInitialData } from "./usePrefetchData";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -43,10 +44,12 @@ export const AuthContainer: React.FC<PropsWithChildren> = ({ children }) => {
    */
   const [appIsReady, setIsReady] = useState<boolean>(false);
 
+  const { isDone: isInitialDataFetchDone } = useFetchInitialData();
+
   const { scheme } = useThemeColors();
 
   const onLayoutRootView = useCallback(async () => {
-    if (appIsReady) {
+    if (appIsReady && isInitialDataFetchDone) {
       // This tells the splash screen to hide immediately! If we call this after
       // `setAppIsReady`, then we may see a blank screen while the app is
       // loading its initial state and rendering its first pixels. So instead,
@@ -56,10 +59,9 @@ export const AuthContainer: React.FC<PropsWithChildren> = ({ children }) => {
         SplashScreen.hideAsync();
       }, 0);
     }
-  }, [appIsReady]);
+  }, [appIsReady, isInitialDataFetchDone]);
 
   const logout = useCallback(async () => {
-    /** @TODO */
     /**
      * Clear all the cache tokens and session from secure storage
      */
@@ -98,8 +100,6 @@ export const AuthContainer: React.FC<PropsWithChildren> = ({ children }) => {
   const checkSession = async () => {
     const accessToken = await get("access_token");
     const refreshToken = await get("refresh_token");
-
-    console.log("checkSession, refreshToken", refreshToken);
 
     if (accessToken && refreshToken) {
       return true;

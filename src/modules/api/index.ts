@@ -40,7 +40,6 @@ class ApiCaller {
   ): Promise<InternalAxiosRequestConfig> {
     const accessToken = await get("access_token");
     config.headers.set("Authorization", `Bearer ${accessToken}`);
-    console.log("Making a request", config.url);
     return config;
   }
 

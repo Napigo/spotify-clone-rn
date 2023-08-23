@@ -2,35 +2,23 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { RecentItem } from "./RecentItem";
 import { useAssets } from "expo-asset";
-import { useQuery } from "@tanstack/react-query";
-import {
-  NewReleaseResponse,
-  fetchNewRelease,
-} from "../../../modules/api/album.apis";
+import { useSelector } from "react-redux";
+import { AppState } from "../../../redux/app-store";
 
 const Component: React.FC = () => {
   const styles = useStyles();
 
-  const {
-    data: response,
-    status,
-    isLoading,
-    error,
-  } = useQuery<NewReleaseResponse>(["new-releases"], {
-    queryFn: () => fetchNewRelease(),
-    staleTime: 60000,
-    cacheTime: 60000,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    retry: true,
-  });
+  const { isReady, data } = useSelector(
+    (state: AppState) => state.RecentTracksStore
+  );
 
-  console.log("DATA IS READY :", response);
   const [assets] = useAssets([
     require("../../../../assets/images/like-songs.png"),
   ]);
 
   // const isReady = Boolean(!isLoading && assets && assets.length > 0);
+
+  const uiReady = Boolean(!isReady && assets && assets.length > 0);
 
   return (
     <View style={styles.container}>
