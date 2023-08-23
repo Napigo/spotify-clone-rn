@@ -1,10 +1,7 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { StyleSheet, View } from "react-native";
 import { RecentItem } from "./RecentItem";
 import { useAssets } from "expo-asset";
-import { Image } from "expo-image";
-
-// const likeSongIMage = require("../../../../assets/images/like-songs.png");
 
 export const RecentTracks: React.FC = () => {
   const styles = useStyles();
@@ -12,13 +9,6 @@ export const RecentTracks: React.FC = () => {
   const [assets] = useAssets([
     require("../../../../assets/images/like-songs.png"),
   ]);
-
-  const imageSource = useMemo(() => {
-    if (assets) {
-      return assets[0] as { uri: string };
-    }
-    return { uri: null };
-  }, [, assets]);
 
   return (
     <View style={styles.container}>
