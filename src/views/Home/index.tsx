@@ -11,6 +11,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { RecentTracks } from "../../components/Home/RecentTracks";
 import { TrendingAlbums } from "../../components/Home/TrendingAlbums";
+import { UICollection } from "../../components/common/UICollection";
 
 export const HomeView: React.FC = () => {
   const height = useBottomTabBarHeight();
@@ -51,7 +52,9 @@ export const HomeView: React.FC = () => {
             <CategoryChips />
           </Animated.View>
           <RecentTracks />
-          <TrendingAlbums />
+          <UICollection title="Trending Albums For You">
+            <TrendingAlbums />
+          </UICollection>
         </Animated.ScrollView>
       </SafeAreaView>
     </>

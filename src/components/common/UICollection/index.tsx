@@ -33,9 +33,9 @@ const useStyles = () => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      //   backgroundColor: "blue",
       flexDirection: "column",
       width: "100%",
+      height: "auto",
     },
     header: {
       height: 60,
