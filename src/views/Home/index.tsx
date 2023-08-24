@@ -13,6 +13,7 @@ import { RecentTracks } from "../../components/Home/RecentTracks";
 import { TrendingAlbums } from "../../components/Home/TrendingAlbums";
 import { UICollection } from "../../components/common/UICollection";
 import { RecommendedArtists } from "../../components/Home/RecommendedArtists";
+import { FeaturedPlaylist } from "../../components/Home/FeaturedPlaylists";
 
 export const HomeView: React.FC = () => {
   const height = useBottomTabBarHeight();
@@ -58,6 +59,10 @@ export const HomeView: React.FC = () => {
           </UICollection>
           <UICollection title="Recommended Artists">
             <RecommendedArtists />
+          </UICollection>
+
+          <UICollection title="Featured Playlists">
+            <FeaturedPlaylist />
           </UICollection>
         </Animated.ScrollView>
       </SafeAreaView>

@@ -18,6 +18,14 @@ import {
   RecommendedArtist,
   recommendedArtistsAction,
 } from "../../redux/stores/recommended-artists.store";
+import {
+  FeaturedPlaylistResponse,
+  fetchFeaturedPlaylist,
+} from "../../modules/api/playlists.apis";
+import {
+  FeaturedPlaylistItem,
+  featuredPlaylistsAction,
+} from "../../redux/stores/featured-playlists.store";
 
 export const InitDataContainer: React.FC<PropsWithChildren> = ({
   children,
@@ -25,6 +33,7 @@ export const InitDataContainer: React.FC<PropsWithChildren> = ({
   const [resources, setResources] = useState<string[]>([
     "new-releases",
     "trending-albums",
+    "featured-playlists",
   ]);
 
   const [isDone, setDone] = useState<boolean>(false);
@@ -65,6 +74,13 @@ export const InitDataContainer: React.FC<PropsWithChildren> = ({
   } = useQuery<TrendingAlbumResponse>(["trending-albums"], {
     queryFn: () => fetchTrendingAlbums(30, genres ?? []),
     enabled: !!genres,
+  });
+
+  const {
+    data: featuredPlaylists_response,
+    isLoading: featurePlaylists_isLoading,
+  } = useQuery<FeaturedPlaylistResponse>(["featured-playlists"], {
+    queryFn: () => fetchFeaturedPlaylist(20),
   });
 
   /**
@@ -128,6 +144,25 @@ export const InitDataContainer: React.FC<PropsWithChildren> = ({
       setErrors([...errors]);
     }
   }, [trendingAlbums_response, trendingAlbums_isLoading, trendingAlbums_error]);
+
+  /**
+   * Populate featured playlist resources
+   */
+  useEffect(() => {
+    if (!featurePlaylists_isLoading && featuredPlaylists_response) {
+      const playlists: FeaturedPlaylistItem[] =
+        featuredPlaylists_response.playlists.items.map((item) => ({
+          id: item.id,
+          name: item.name,
+          description: item.description,
+          photoCover: item.images ? item.images[0].url : null,
+        }));
+
+      dispatch(featuredPlaylistsAction.load(playlists));
+      resources.splice(resources.indexOf("featured-playlists"), 1);
+      setResources([...resources]);
+    }
+  }, [featuredPlaylists_response, featurePlaylists_isLoading]);
 
   useEffect(() => {
     if (resources.length === 0) {
