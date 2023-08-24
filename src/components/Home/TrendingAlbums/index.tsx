@@ -39,7 +39,7 @@ export const TrendingAlbums: React.FC = () => {
         showsHorizontalScrollIndicator={false}
         initialNumToRender={30}
         maxToRenderPerBatch={30}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => `${item.id}-${index}`}
         contentContainerStyle={{ paddingHorizontal: SCREEN_EDGE_SPACING }}
         ItemSeparatorComponent={() => <View style={styles.seperator} />}
       />

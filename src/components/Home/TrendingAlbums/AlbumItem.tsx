@@ -18,8 +18,8 @@ export const AlbumItem: React.FC<TrendingAlbum> = ({
         <UIText level="caption" numberOfLines={1} style={styles.albumName}>
           {albumName}
         </UIText>
-        <UIText level="caption" style={styles.artistName}>
-          {artistName}
+        <UIText level="caption" style={styles.artistName} numberOfLines={1}>
+          by - {artistName}
         </UIText>
       </View>
     </View>

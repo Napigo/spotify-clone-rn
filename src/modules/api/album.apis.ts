@@ -1,7 +1,5 @@
-import axios, { AxiosResponse } from "axios";
-import { get } from "../secure-storage";
+import { AxiosResponse } from "axios";
 import { apis } from ".";
-import { slice } from "lodash";
 
 export interface NewReleaseResponse {
   albums: AlbumPayload;
@@ -43,6 +41,11 @@ export interface TrendingAlbumResponse {
         name: string;
       }[];
     };
+    artists: {
+      id: string;
+      name: string;
+      images: IImage[];
+    }[];
   }[];
 }
 

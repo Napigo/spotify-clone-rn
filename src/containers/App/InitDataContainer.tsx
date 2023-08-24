@@ -3,7 +3,6 @@ import * as SplashScreen from "expo-splash-screen";
 import { useDispatch } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import {
-  AvailableGenresResponse,
   NewReleaseResponse,
   TrendingAlbumResponse,
   fetchNewRelease,
@@ -15,6 +14,10 @@ import {
   TrendingAlbum,
   trendingAlbumsAction,
 } from "../../redux/stores/trending-albums.store";
+import {
+  RecommendedArtist,
+  recommendedArtistsAction,
+} from "../../redux/stores/recommended-artists.store";
 
 export const InitDataContainer: React.FC<PropsWithChildren> = ({
   children,
@@ -42,18 +45,17 @@ export const InitDataContainer: React.FC<PropsWithChildren> = ({
     retry: true,
   });
 
-  const {
-    data: availableGenres_response,
-    isLoading: availableGenres_isLoading,
-    error: availableGenres_error,
-  } = useQuery<string[]>(["available-genres"], {
-    queryFn: () => fetchRecommendedGenres(),
-    staleTime: 60000,
-    cacheTime: 60000,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    retry: true,
-  });
+  const { data: availableGenres_response } = useQuery<string[]>(
+    ["available-genres"],
+    {
+      queryFn: () => fetchRecommendedGenres(),
+      staleTime: 60000,
+      cacheTime: 60000,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      retry: true,
+    }
+  );
 
   const genres = availableGenres_response;
   const {
@@ -90,9 +92,24 @@ export const InitDataContainer: React.FC<PropsWithChildren> = ({
    */
   useEffect(() => {
     if (!trendingAlbums_isLoading && trendingAlbums_response) {
+      // Holder to populate list of recommended artists
+      const artists: RecommendedArtist[] = [];
+
       const payloads: TrendingAlbum[] = trendingAlbums_response.tracks.map(
         (item) => {
           const album = item.album;
+
+          /**
+           * Extract the artists from each track and push into recommended artists listing
+           */
+          const targetArtist = item.artists[0];
+
+          artists.push({
+            id: targetArtist.id,
+            images: targetArtist.images,
+            name: targetArtist.name,
+          });
+
           return {
             id: album.id,
             coverImage: album.images[0].url ?? "",
@@ -101,6 +118,7 @@ export const InitDataContainer: React.FC<PropsWithChildren> = ({
           };
         }
       );
+      dispatch(recommendedArtistsAction.load(artists));
       dispatch(trendingAlbumsAction.load(payloads));
       resources.splice(resources.indexOf("trending-albums"), 1);
       setResources([...resources]);
