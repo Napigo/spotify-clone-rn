@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { AppState } from "../../../redux/app-store";
 import { ReleaseItem } from "../../../modules/api/album.apis";
 import { chunk, uniqueId } from "lodash";
+import { SCREEN_EDGE_SPACING } from "../../../theme/constants";
 
 const Component: React.FC = () => {
   const styles = useStyles();
@@ -60,7 +61,7 @@ const useStyles = () => {
       height: "auto",
       width: "100%",
       gap: GUTTER,
-      paddingHorizontal: 20,
+      paddingHorizontal: SCREEN_EDGE_SPACING,
       paddingVertical: 10,
     },
     row: {

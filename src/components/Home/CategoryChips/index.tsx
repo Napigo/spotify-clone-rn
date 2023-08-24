@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { useThemeColors } from "../../../theme/ThemeProvider";
 import { UIChip } from "../../common/UIChip";
+import { SCREEN_EDGE_SPACING } from "../../../theme/constants";
 
 export const CategoryChips: React.FC = () => {
   const styles = useStyles();
@@ -24,7 +25,7 @@ const useStyles = () => {
       width: "100%",
       flexDirection: "row",
       alignItems: "center",
-      paddingHorizontal: 20,
+      paddingHorizontal: SCREEN_EDGE_SPACING,
       gap: 10,
     },
   });

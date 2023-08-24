@@ -9,6 +9,7 @@ import Animated, {
 import { borderRadius } from "../../../theme/radius";
 import { useThemeColors } from "../../../theme/ThemeProvider";
 import { UIText } from "../UIText";
+import { SCREEN_EDGE_SPACING } from "../../../theme/constants";
 
 interface UIChipProps extends PressableProps {}
 export const UIChip: React.FC<UIChipProps> = ({ children, ...props }) => {
@@ -48,7 +49,7 @@ const useStyles = () => {
       justifyContent: "center",
       borderRadius: borderRadius.full,
       backgroundColor: scheme.secondaryBackground,
-      paddingHorizontal: 20,
+      paddingHorizontal: SCREEN_EDGE_SPACING,
       height: 36,
     },
   });

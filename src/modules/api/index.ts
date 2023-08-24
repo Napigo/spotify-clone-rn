@@ -99,6 +99,8 @@ class ApiCaller {
               reject(err);
             });
         }
+      } else {
+        reject(error.response);
       }
     });
   }

@@ -1,12 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import SampleReducer from "./stores/sample.store";
 import RecentTracksReducer from "./stores/recent-tracks.store";
+import TrendingAlbumsReducer from "./stores/trending-albums.store";
 
 export const AppStore = configureStore({
   devTools: true,
   reducer: {
     RecentTracksStore: RecentTracksReducer,
-    Sample: SampleReducer,
+    TrendingAlbumsStore: TrendingAlbumsReducer,
   },
 });
 

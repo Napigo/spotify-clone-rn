@@ -9,7 +9,6 @@ const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 
 export const AuthNavigation: React.FC = () => {
   useEffect(() => {
-    console.log("AuthContainer rendered");
     SplashScreen.hideAsync();
   }, []);
 
