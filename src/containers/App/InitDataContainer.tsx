@@ -106,7 +106,7 @@ export const InitDataContainer: React.FC<PropsWithChildren> = ({
 
           artists.push({
             id: targetArtist.id,
-            images: targetArtist.images,
+            photoCover: null,
             name: targetArtist.name,
           });
 

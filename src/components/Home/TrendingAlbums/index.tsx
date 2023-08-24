@@ -18,10 +18,6 @@ export const TrendingAlbums: React.FC = () => {
     (state: AppState) => state.TrendingAlbumsStore
   );
 
-  if (!isReady) {
-    return null;
-  }
-
   const renderItem = useCallback(({ item }: RenderItemProps) => {
     return (
       <View style={styles.item}>
@@ -29,6 +25,10 @@ export const TrendingAlbums: React.FC = () => {
       </View>
     );
   }, []);
+
+  if (!isReady) {
+    return null;
+  }
 
   return (
     <View style={styles.container}>
@@ -53,11 +53,11 @@ const useStyles = () => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      height: ITEM_WIDTH * 1.3,
+      height: "100%",
       backgroundColor: scheme.systemBackground,
     },
     item: {
-      height: ITEM_WIDTH + 20,
+      height: ITEM_WIDTH + 50,
       width: ITEM_WIDTH,
     },
     seperator: {

@@ -4,7 +4,7 @@ import { IImage } from "../../modules/api/album.apis";
 export type RecommendedArtist = {
   id: string;
   name: string;
-  images: IImage[];
+  photoCover: string | null;
 };
 
 interface RecommendedArtistsState {

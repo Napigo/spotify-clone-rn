@@ -1,21 +1,27 @@
 import { AxiosError } from "axios";
 import { apis } from ".";
-import { TrendingAlbumResponse } from "./album.apis";
+import { IImage } from "./album.apis";
+
+interface ArtistsResponse {
+  artists: {
+    id: string;
+    name: string;
+    images: IImage[];
+  }[];
+}
 
 /**
  *
- * @deprecated - to reuse the same recommendation api seeds from genres to get
  * list of artist
  * @param limit
  * @param ids
  */
-export async function fetchRecommendedArtist(
-  limit = 20,
+export async function fetchArtists(
   artists: string[]
-): Promise<TrendingAlbumResponse> {
+): Promise<ArtistsResponse> {
   try {
     const response = await apis.callApi({
-      url: `v1/recommendations?limit=${limit}&artists=${artists.join(",")}`,
+      url: `v1/artists?ids=${artists.join(",")}`,
       method: "get",
     });
     if (response.status === 200 && response.data) {

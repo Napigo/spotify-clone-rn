@@ -56,7 +56,7 @@ export const HomeView: React.FC = () => {
           <UICollection title="Trending Albums For You">
             <TrendingAlbums />
           </UICollection>
-          <UICollection title="Recommended artists">
+          <UICollection title="Recommended Artists">
             <RecommendedArtists />
           </UICollection>
         </Animated.ScrollView>
