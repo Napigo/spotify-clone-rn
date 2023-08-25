@@ -27,7 +27,7 @@ const useStyles = () => {
   return StyleSheet.create({
     container: {
       height: "100%",
-      //   backgroundColor: scheme.primary,
+      backgroundColor: scheme.systemBackground,
       width: "100%",
       flexDirection: "row",
       alignItems: "center",

@@ -10,6 +10,8 @@ import { SearchHeader } from "../../components/Search/SearchHeader";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { SCREEN_HEIGHT, STANDARD_TOPBAR_HEIGHT } from "../../theme/constants";
 import { SearchBar } from "../../components/Search/SearchBar";
+import { CategoryList } from "../../components/Search/CategoryList";
+import { SearchViewController } from "./SearchViewController";
 
 export const SearchView: React.FC = () => {
   const styles = useStyles();
@@ -34,22 +36,26 @@ export const SearchView: React.FC = () => {
   });
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Animated.ScrollView
-        contentContainerStyle={{
-          paddingBottom: height,
-        }}
-        scrollEventThrottle={1}
-        onScroll={scrollHandler}
-        style={{ backgroundColor: "D", height: SCREEN_HEIGHT, flex: 1 }}
-      >
-        <SearchHeader />
+    <>
+      <SearchViewController />
+      <SafeAreaView style={{ flex: 1 }}>
+        <Animated.ScrollView
+          contentContainerStyle={{
+            paddingBottom: height,
+          }}
+          scrollEventThrottle={1}
+          onScroll={scrollHandler}
+          style={{ backgroundColor: "D", height: SCREEN_HEIGHT, flex: 1 }}
+        >
+          <SearchHeader />
 
-        <Animated.View style={[styles.sticky, stickyStyle]}>
-          <SearchBar />
-        </Animated.View>
-      </Animated.ScrollView>
-    </SafeAreaView>
+          <Animated.View style={[styles.sticky, stickyStyle]}>
+            <SearchBar />
+          </Animated.View>
+          <CategoryList />
+        </Animated.ScrollView>
+      </SafeAreaView>
+    </>
   );
 };
 
