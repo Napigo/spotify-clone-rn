@@ -1,5 +1,4 @@
 import { createAction, createReducer } from "@reduxjs/toolkit";
-import { find, findIndex } from "lodash";
 
 export type CategoryItem = {
   id: string;

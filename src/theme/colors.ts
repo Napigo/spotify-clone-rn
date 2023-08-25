@@ -25,3 +25,20 @@ export const appSchemeColor: UISchemeColor = {
   systemGray6: "#F2F2F7",
   line: "#4D4D4F",
 };
+
+export const category_colors = [
+  "#E33300",
+  "#7358FE",
+  "#203264",
+  "#E9105B",
+  "#BA5D08",
+  "#148A06",
+  "#7F5F9A",
+  "#476989",
+  "#FF0191",
+  "#046951",
+  "#777777",
+  "#AF2795",
+  "#E91229",
+  "#0C73ED",
+];
