@@ -5,6 +5,7 @@ import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { HomeHeader } from "../../components/Home/HomeHeader";
 import { CategoryChips } from "../../components/Home/CategoryChips";
 import Animated, {
+  FadeIn,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
@@ -39,7 +40,7 @@ export const HomeView: React.FC = () => {
   });
 
   return (
-    <>
+    <Animated.View style={{ flex: 1 }} entering={FadeIn}>
       <SafeAreaView style={{ flex: 1 }}>
         <Animated.ScrollView
           contentContainerStyle={{
@@ -66,7 +67,7 @@ export const HomeView: React.FC = () => {
           </UICollection>
         </Animated.ScrollView>
       </SafeAreaView>
-    </>
+    </Animated.View>
   );
 };
 

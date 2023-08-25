@@ -19,11 +19,15 @@ export const usePopulateArtistPhotos = (ids: string[]) => {
   useEffect(() => {
     if (!isLoading && response) {
       const { artists } = response;
+
       dispatch(
         recommendedArtistsAction.load(
           artists.map((item) => ({
             id: item.id,
-            photoCover: item.images ? item.images[0].url : null,
+            photoCover:
+              item.images && item.images[0] !== undefined
+                ? item.images[0].url
+                : null,
             name: item.name,
           }))
         )
