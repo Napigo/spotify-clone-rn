@@ -57,11 +57,13 @@ export const CategoryList: React.FC = () => {
                     {col.name}
                   </UIText>
                   <View style={styles.imageContainer}>
-                    <Image
-                      source={col.coverPhoto ?? assets![0].uri}
-                      style={styles.image}
-                      contentFit="cover"
-                    />
+                    {assets !== undefined && (
+                      <Image
+                        source={col.coverPhoto ?? assets[0].uri}
+                        style={styles.image}
+                        contentFit="cover"
+                      />
+                    )}
                   </View>
                 </View>
               ))}
