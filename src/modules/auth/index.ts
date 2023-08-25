@@ -1,6 +1,5 @@
 import queryString from "query-string";
 import axios, { AxiosError } from "axios";
-import base64 from "react-native-base64";
 import { get } from "../secure-storage";
 
 const Buffer = require("buffer").Buffer;
@@ -76,32 +75,34 @@ export async function handleAuthRedirect(
   });
 }
 
-export async function refreshAccessToken(): Promise<{
-  access_token: string;
-  refresh_token: string;
-}> {
-  return new Promise(async (resolve, reject) => {
-    const refreshToken = await get("refresh_token");
-    if (refreshToken) {
-      axios({
-        url: tokenBaseURL,
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          ...authHeader,
-        },
-        data: {
-          grant_type: "refresh_token",
-          refresh_token: refreshToken,
-        },
-      }).then((result) => {
-        const { data } = result;
-        resolve({
-          access_token: data.access_token,
-          refresh_token: data.refresh_token,
+export async function refreshAccessToken(): Promise<string> {
+  console.log("refreshAccessToken");
+  return new Promise((resolve, reject) => {
+    get("refresh_token").then((refreshToken) => {
+      if (refreshToken) {
+        axios({
+          url: tokenBaseURL,
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            ...authHeader,
+          },
+          data: {
+            grant_type: "refresh_token",
+            refresh_token: refreshToken,
+          },
+        }).then((result) => {
+          const { data } = result;
+          resolve(data.access_token);
         });
-      });
-    }
-    reject("failed to refresh access token");
+      } else {
+        reject(
+          new Error(
+            "Refresh token not avalable in secure storage, result : ",
+            refreshToken
+          )
+        );
+      }
+    });
   });
 }

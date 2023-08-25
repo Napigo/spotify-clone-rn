@@ -4,6 +4,7 @@ import { useThemeColors } from "../../../theme/ThemeProvider";
 import { borderRadius } from "../../../theme/radius";
 import { Image } from "expo-image";
 import { UIText } from "../../common/UIText";
+import { UIPressable } from "../../common/UIPressable";
 
 type RecentItemProps = {
   coverImage: string;
@@ -18,12 +19,12 @@ export const RecentItem: React.FC<RecentItemProps> = ({
   const styles = useStyles();
 
   return (
-    <View style={styles.container}>
+    <UIPressable style={styles.container}>
       <Image source={coverImage} style={styles.image} />
-      <UIText level="subhead" style={styles.label}>
+      <UIText level="subhead" style={styles.label} numberOfLines={2}>
         {label}
       </UIText>
-    </View>
+    </UIPressable>
   );
 };
 
@@ -40,12 +41,15 @@ const useStyles = () => {
       flexDirection: "row",
       alignItems: "center",
       gap: 10,
+      paddingRight: 20,
     },
     image: {
       height: "100%",
       aspectRatio: 1,
     },
     label: {
+      flex: 1,
+      fontSize: 14,
       fontWeight: "700",
     },
   });

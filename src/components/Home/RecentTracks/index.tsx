@@ -1,65 +1,53 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import { RecentItem } from "./RecentItem";
 import { useAssets } from "expo-asset";
+import { useSelector } from "react-redux";
+import { AppState } from "../../../redux/app-store";
+import { ReleaseItem } from "../../../modules/api/album.apis";
+import { chunk, uniqueId } from "lodash";
+import { SCREEN_EDGE_SPACING } from "../../../theme/constants";
 
-export const RecentTracks: React.FC = () => {
+const Component: React.FC = () => {
   const styles = useStyles();
+
+  const { isReady, data } = useSelector(
+    (state: AppState) => state.RecentTracksStore
+  );
 
   const [assets] = useAssets([
     require("../../../../assets/images/like-songs.png"),
   ]);
 
+  const viewModels: ReleaseItem[] = useMemo(() => {
+    return isReady && data.length > 0
+      ? [
+          {
+            id: uniqueId(),
+            name: "Liked Songs",
+            images: [{ url: assets?.[0].uri ?? "", height: "", width: "" }],
+          },
+          ...data,
+        ]
+      : [];
+  }, [isReady, data, assets]);
+
   return (
     <View style={styles.container}>
-      <View style={styles.row}>
-        <View style={styles.col}>
-          <RecentItem
-            coverImage={assets ? assets[0].uri : ""}
-            label="Liked Songs"
-            onPress={() => {}}
-          />
-        </View>
-        <View style={styles.col}>
-          <RecentItem
-            coverImage={assets ? assets[0].uri : ""}
-            label=""
-            onPress={() => {}}
-          />
-        </View>
-      </View>
-      <View style={styles.row}>
-        <View style={styles.col}>
-          <RecentItem
-            coverImage={assets ? assets[0].uri : ""}
-            label=""
-            onPress={() => {}}
-          />
-        </View>
-        <View style={styles.col}>
-          <RecentItem
-            coverImage={assets ? assets[0].uri : ""}
-            label=""
-            onPress={() => {}}
-          />
-        </View>
-      </View>
-      <View style={styles.row}>
-        <View style={styles.col}>
-          <RecentItem
-            coverImage={assets ? assets[0].uri : ""}
-            label=""
-            onPress={() => {}}
-          />
-        </View>
-        <View style={styles.col}>
-          <RecentItem
-            coverImage={assets ? assets[0].uri : ""}
-            label=""
-            onPress={() => {}}
-          />
-        </View>
-      </View>
+      {viewModels.length > 0 &&
+        chunk(viewModels, 2).map((row: ReleaseItem[]) => (
+          <View style={styles.row} key={uniqueId()}>
+            {row.map((item: ReleaseItem) => (
+              <View style={styles.col} key={uniqueId()}>
+                <RecentItem
+                  coverImage={item.images[0].url}
+                  label={item.name}
+                  onPress={() => {}}
+                />
+              </View>
+            ))}
+          </View>
+        ))}
     </View>
   );
 };
@@ -73,7 +61,7 @@ const useStyles = () => {
       height: "auto",
       width: "100%",
       gap: GUTTER,
-      paddingHorizontal: 20,
+      paddingHorizontal: SCREEN_EDGE_SPACING,
       paddingVertical: 10,
     },
     row: {
@@ -85,7 +73,9 @@ const useStyles = () => {
     col: {
       flex: 1,
       width: "50%",
-      height: 50,
+      height: 55,
     },
   });
 };
+
+export const RecentTracks = React.memo(Component);

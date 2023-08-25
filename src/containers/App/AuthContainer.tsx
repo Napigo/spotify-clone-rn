@@ -6,13 +6,9 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import * as SplashScreen from "expo-splash-screen";
 import { View } from "react-native";
 import { get, remove, save } from "../../modules/secure-storage";
 import { useThemeColors } from "../../theme/ThemeProvider";
-
-// Keep the splash screen visible while we fetch resources
-SplashScreen.preventAutoHideAsync();
 
 type AuthContextProps = {
   isAuthenticated: boolean;
@@ -45,21 +41,7 @@ export const AuthContainer: React.FC<PropsWithChildren> = ({ children }) => {
 
   const { scheme } = useThemeColors();
 
-  const onLayoutRootView = useCallback(async () => {
-    if (appIsReady) {
-      // This tells the splash screen to hide immediately! If we call this after
-      // `setAppIsReady`, then we may see a blank screen while the app is
-      // loading its initial state and rendering its first pixels. So instead,
-      // we hide the splash screen once we know the root view has already
-      // performed layout.
-      setTimeout(() => {
-        SplashScreen.hideAsync();
-      }, 0);
-    }
-  }, [appIsReady]);
-
   const logout = useCallback(async () => {
-    /** @TODO */
     /**
      * Clear all the cache tokens and session from secure storage
      */
@@ -84,8 +66,17 @@ export const AuthContainer: React.FC<PropsWithChildren> = ({ children }) => {
     []
   );
 
+  const checkSession = async () => {
+    const accessToken = await get("access_token");
+    const refreshToken = await get("refresh_token");
+    if (accessToken && refreshToken) {
+      return true;
+    }
+    return false;
+  };
+
   useEffect(() => {
-    get("access_token").then((result) => {
+    checkSession().then((result) => {
       if (result) {
         setAuthenticated(true);
       } else {
@@ -107,10 +98,7 @@ export const AuthContainer: React.FC<PropsWithChildren> = ({ children }) => {
         logout: logout,
       }}
     >
-      <View
-        style={{ flex: 1, backgroundColor: scheme.systemBackground }}
-        onLayout={onLayoutRootView}
-      >
+      <View style={{ flex: 1, backgroundColor: scheme.systemBackground }}>
         {children}
       </View>
     </AuthContext.Provider>

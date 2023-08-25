@@ -4,18 +4,19 @@ import { SCREEN_HEIGHT, STANDARD_TOPBAR_HEIGHT } from "../../theme/constants";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { HomeHeader } from "../../components/Home/HomeHeader";
 import { CategoryChips } from "../../components/Home/CategoryChips";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, {
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
 import { RecentTracks } from "../../components/Home/RecentTracks";
+import { TrendingAlbums } from "../../components/Home/TrendingAlbums";
+import { UICollection } from "../../components/common/UICollection";
+import { RecommendedArtists } from "../../components/Home/RecommendedArtists";
+import { FeaturedPlaylist } from "../../components/Home/FeaturedPlaylists";
 
 export const HomeView: React.FC = () => {
   const height = useBottomTabBarHeight();
-
-  const a = useSafeAreaInsets();
 
   const translationY = useSharedValue(0);
 
@@ -53,6 +54,16 @@ export const HomeView: React.FC = () => {
             <CategoryChips />
           </Animated.View>
           <RecentTracks />
+          <UICollection title="Trending Albums For You">
+            <TrendingAlbums />
+          </UICollection>
+          <UICollection title="Recommended Artists">
+            <RecommendedArtists />
+          </UICollection>
+
+          <UICollection title="Featured Playlists">
+            <FeaturedPlaylist />
+          </UICollection>
         </Animated.ScrollView>
       </SafeAreaView>
     </>

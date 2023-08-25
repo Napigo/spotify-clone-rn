@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { UIButton } from "../../components/common/UIButton";
 import { WhiteLogo } from "../../components/svgs/WhiteLogo";
 import { UIText } from "../../components/common/UIText";
-import { SCREEN_HEIGHT } from "../../theme/constants";
+import { SCREEN_EDGE_SPACING, SCREEN_HEIGHT } from "../../theme/constants";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { AuthStackParamList } from "../../navigations/types";
 
@@ -21,7 +21,7 @@ export const LoginView: React.FC = () => {
         height: "100%",
         alignItems: "center",
         justifyContent: "flex-end",
-        paddingHorizontal: 20,
+        paddingHorizontal: SCREEN_EDGE_SPACING,
         gap: 50,
         paddingBottom: SCREEN_HEIGHT * 0.2,
       }}
