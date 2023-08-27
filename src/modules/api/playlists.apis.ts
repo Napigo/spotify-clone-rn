@@ -41,3 +41,36 @@ export async function fetchFeaturedPlaylist(
     });
   }
 }
+
+export interface CategoryPlaylistResponse {
+  playlists: {
+    items: {
+      images: IImage[];
+    }[];
+  };
+}
+export async function fetchCategoryPlaylist(
+  id: string
+): Promise<CategoryPlaylistResponse> {
+  try {
+    const response = await apis.callApi({
+      url: `v1/browse/categories/${id}/playlists`,
+      method: "get",
+    });
+
+    if (response.status === 200 && response.data) {
+      return response.data;
+    } else {
+      return Promise.reject({
+        code: response.status,
+        data: response.data,
+      });
+    }
+  } catch (err) {
+    const error = err as AxiosError;
+    return Promise.reject({
+      code: error.code,
+      data: error.response?.data,
+    });
+  }
+}

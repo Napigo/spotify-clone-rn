@@ -13,7 +13,7 @@ interface SeveralCategoriesResponse {
 export async function fetchCategories(): Promise<SeveralCategoriesResponse> {
   try {
     const response = await apis.callApi({
-      url: `v1/browse/categories?limit=3&country=SG&`,
+      url: `v1/browse/categories?limit=30&country=SG&`,
     });
     if (response.status === 200 && response.data) {
       return response.data;

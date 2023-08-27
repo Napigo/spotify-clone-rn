@@ -7,6 +7,7 @@ import { TabBarIcon } from "../components/TabBarIcon";
 import { UIText } from "../components/common/UIText";
 import { useThemeColors } from "../theme/ThemeProvider";
 import { StyleSheet } from "react-native";
+import { SearchView } from "../views/Search";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 
@@ -53,7 +54,7 @@ export const TabNavigation: React.FC = () => {
       />
       <Tab.Screen
         name="Search"
-        component={HomeView}
+        component={SearchView}
         options={{ title: "Search" }}
         listeners={() => ({
           tabPress: runHaptics,
