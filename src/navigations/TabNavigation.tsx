@@ -8,6 +8,7 @@ import { UIText } from "../components/common/UIText";
 import { useThemeColors } from "../theme/ThemeProvider";
 import { StyleSheet } from "react-native";
 import { SearchView } from "../views/Search";
+import { LibraryView } from "../views/Library";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 
@@ -62,8 +63,10 @@ export const TabNavigation: React.FC = () => {
       />
       <Tab.Screen
         name="Library"
-        component={HomeView}
-        options={{ title: "Library" }}
+        component={LibraryView}
+        options={{
+          title: "Library",
+        }}
         listeners={() => ({
           tabPress: runHaptics,
         })}
