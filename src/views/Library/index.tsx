@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useThemeColors } from "../../theme/ThemeProvider";
 import { YourLibraryHeader } from "../../components/YourLibrary/YourLibraryHeader";
 import {
@@ -9,13 +9,11 @@ import {
 import { MenusToolbar } from "../../components/YourLibrary/MenusToolbar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { YourLibraryContent } from "../../components/YourLibrary/YourLibraryContent";
-import { useSelector } from "react-redux";
-import { AppState } from "../../redux/app-store";
 
 export const LibraryView: React.FC = () => {
   const styles = useStyles();
 
-  const a = useSafeAreaInsets();
+  const safeArea = useSafeAreaInsets();
 
   return (
     <View style={{ flex: 1 }}>
@@ -24,7 +22,9 @@ export const LibraryView: React.FC = () => {
           styles.topHeaderContainer,
           {
             height:
-              STANDARD_TOPBAR_HEIGHT + LIBRARY_MENUS_TOOLBAR_HEIGHT + a.top,
+              STANDARD_TOPBAR_HEIGHT +
+              LIBRARY_MENUS_TOOLBAR_HEIGHT +
+              safeArea.top,
           },
         ]}
       >

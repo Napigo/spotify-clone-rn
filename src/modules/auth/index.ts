@@ -8,7 +8,8 @@ const authBaseURL = process.env.EXPO_PUBLIC_SPOTIFY_AUTH_BASEURL;
 const tokenBaseURL = process.env.EXPO_PUBLIC_SPOTIFY_TOKEN_BASEURL;
 const apiId = process.env.EXPO_PUBLIC_SPOTIFY_CLIENT_ID;
 const redirectUri = "http://www.napigo.co";
-var scope = "user-read-private user-read-email";
+var scope =
+  "user-read-private user-read-email user-library-read playlist-read-private";
 
 const authHeader = {
   Authorization:
