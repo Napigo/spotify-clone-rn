@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as Haptics from "expo-haptics";
 import { TabStackParamList } from "./types";
 import { HomeView } from "../views/Home";
-import { TabBarIcon } from "../components/TabBarIcon";
+import { TabBarIcon } from "../components/Navigations/TabBarIcon";
 import { UIText } from "../components/common/UIText";
 import { useThemeColors } from "../theme/ThemeProvider";
 import { StyleSheet } from "react-native";

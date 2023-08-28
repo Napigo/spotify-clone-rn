@@ -7,8 +7,8 @@ import {
   STANDARD_TOPBAR_HEIGHT,
 } from "../../theme/constants";
 import { MenusToolbar } from "../../components/YourLibrary/MenusToolbar";
-import { UIText } from "../../components/common/UIText";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { YourLibraryContent } from "../../components/YourLibrary/YourLibraryContent";
 
 export const LibraryView: React.FC = () => {
   const styles = useStyles();
@@ -29,78 +29,7 @@ export const LibraryView: React.FC = () => {
         <YourLibraryHeader />
         <MenusToolbar />
       </View>
-      <ScrollView>
-        <View>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-          <UIText>Hello world</UIText>
-        </View>
-      </ScrollView>
+      <YourLibraryContent />
     </View>
   );
 };
