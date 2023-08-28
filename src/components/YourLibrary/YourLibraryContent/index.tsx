@@ -2,34 +2,48 @@ import React, { useCallback } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { useThemeColors } from "../../../theme/ThemeProvider";
 import { uniqueId } from "lodash";
-import { SCREEN_EDGE_SPACING } from "../../../theme/constants";
+import {
+  BOTTOM_TABBAR_HEIGHT,
+  SCREEN_EDGE_SPACING,
+} from "../../../theme/constants";
 import { ListHeader } from "./ListHeader";
+import { useSelector } from "react-redux";
+import { AppState } from "../../../redux/app-store";
+import { CurrentUserPlaylist } from "../../../redux/stores/user-playlists.store";
+import { UIText } from "../../common/UIText";
+import { PlaylistListItem } from "./PlaylistListItem";
 
 type RenderItemProps = {
-  item: Record<string, any>;
+  item: CurrentUserPlaylist;
 };
 
 export const YourLibraryContent: React.FC = () => {
   const styles = useStyles();
 
+  const { playlists } = useSelector(
+    (state: AppState) => state.CurrentUserPlaylistsStore
+  );
+
   const renderItem = useCallback(({ item }: RenderItemProps) => {
-    return <View style={styles.item}></View>;
+    return (
+      <View style={styles.item}>
+        <PlaylistListItem {...item} />
+      </View>
+    );
   }, []);
 
   return (
     <View style={styles.container}>
       <FlatList
         renderItem={renderItem}
-        data={Array(20)
-          .fill(0)
-          .map((_, index) => ({
-            id: uniqueId(),
-            name: `Item No. ${index + 1}`,
-          }))}
+        data={playlists}
         initialNumToRender={30}
         maxToRenderPerBatch={30}
         keyExtractor={(item) => `${item.id} - ${uniqueId()}`}
-        contentContainerStyle={{ paddingHorizontal: SCREEN_EDGE_SPACING }}
+        contentContainerStyle={{
+          paddingHorizontal: SCREEN_EDGE_SPACING,
+          paddingBottom: BOTTOM_TABBAR_HEIGHT + 50,
+        }}
         ItemSeparatorComponent={() => <View style={styles.seperator}></View>}
         ListHeaderComponent={() => <ListHeader />}
       />
@@ -50,7 +64,6 @@ const useStyles = () => {
     item: {
       height: ITEM_HEIGHT,
       width: "100%",
-      backgroundColor: scheme.primary,
     },
     seperator: {
       height: 18,

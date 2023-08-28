@@ -29,7 +29,8 @@ import {
   featuredPlaylistsAction,
 } from "../../redux/stores/featured-playlists.store";
 import { SearchViewController } from "../../views/Search/SearchViewController";
-import { LibraryViewController } from "../../views/Library/LibraryViewController";
+import { SavedTracksController } from "../../views/Library/SavedTracksController";
+import { UserPlaylistController } from "../../views/Library/UserPlaylistsController";
 
 /**
  * This component initialize all data required
@@ -203,7 +204,8 @@ export const AppContainer: React.FC<PropsWithChildren> = ({ children }) => {
   return (
     <>
       <SearchViewController />
-      <LibraryViewController />
+      <SavedTracksController />
+      <UserPlaylistController />
       {children}
     </>
   );

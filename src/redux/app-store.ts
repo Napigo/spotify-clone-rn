@@ -6,6 +6,7 @@ import FeaturedPlaylistsReducer from "./stores/featured-playlists.store";
 import CategoriesReducer from "./stores/categories.store";
 import MeReducer from "./stores/me.store";
 import SavedTrackReducer from "./stores/savedtracks.store";
+import CurrentUserPlaylistsReducer from "./stores/user-playlists.store";
 
 export const AppStore = configureStore({
   devTools: true,
@@ -17,6 +18,7 @@ export const AppStore = configureStore({
     FeaturedPlaylistsStore: FeaturedPlaylistsReducer,
     CategoriesStore: CategoriesReducer,
     SavedTracksStore: SavedTrackReducer,
+    CurrentUserPlaylistsStore: CurrentUserPlaylistsReducer,
   },
 });
 

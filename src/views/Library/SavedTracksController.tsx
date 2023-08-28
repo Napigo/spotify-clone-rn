@@ -10,7 +10,7 @@ import {
   savedTracksAction,
 } from "../../redux/stores/savedtracks.store";
 
-export const LibraryViewController: React.FC = () => {
+export const SavedTracksController: React.FC = () => {
   const { data, error } = useQuery(["liked-songs"], {
     queryFn: () => fetchMyLikesSongs(50, 0),
   });
