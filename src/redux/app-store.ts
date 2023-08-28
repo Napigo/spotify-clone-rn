@@ -4,10 +4,12 @@ import TrendingAlbumsReducer from "./stores/trending-albums.store";
 import RecommendedArtistsReducer from "./stores/recommended-artists.store";
 import FeaturedPlaylistsReducer from "./stores/featured-playlists.store";
 import CategoriesReducer from "./stores/categories.store";
+import MeReducer from "./stores/me.store";
 
 export const AppStore = configureStore({
   devTools: true,
   reducer: {
+    MeStore: MeReducer,
     RecentTracksStore: RecentTracksReducer,
     TrendingAlbumsStore: TrendingAlbumsReducer,
     RecommendedArtistsStore: RecommendedArtistsReducer,
