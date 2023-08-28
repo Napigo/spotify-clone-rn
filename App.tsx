@@ -3,7 +3,7 @@ import { ThemeContextProvider } from "./src/theme/ThemeProvider";
 import { Provider } from "react-redux";
 import { AppStore } from "./src/redux/app-store";
 import { AppNavigation } from "./src/navigations";
-import { AuthContainer } from "./src/containers/App/AuthContainer";
+import { AuthContainer } from "./src/containers/Auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as SplashScreen from "expo-splash-screen";
 

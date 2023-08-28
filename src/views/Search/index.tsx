@@ -11,7 +11,6 @@ import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { SCREEN_HEIGHT, STANDARD_TOPBAR_HEIGHT } from "../../theme/constants";
 import { SearchBar } from "../../components/Search/SearchBar";
 import { CategoryList } from "../../components/Search/CategoryList";
-import { SearchViewController } from "./SearchViewController";
 
 export const SearchView: React.FC = () => {
   const styles = useStyles();
@@ -37,7 +36,6 @@ export const SearchView: React.FC = () => {
 
   return (
     <>
-      <SearchViewController />
       <SafeAreaView style={{ flex: 1 }}>
         <Animated.ScrollView
           contentContainerStyle={{
