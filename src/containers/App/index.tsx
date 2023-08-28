@@ -1,7 +1,9 @@
 import React, { PropsWithChildren, useEffect, useState } from "react";
-import * as SplashScreen from "expo-splash-screen";
-import { useDispatch } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
+import { useDispatch } from "react-redux";
+import * as SplashScreen from "expo-splash-screen";
+import { UserProfileResponse, getUserProfile } from "../../modules/api/me.apis";
+import { MeActions } from "../../redux/stores/me.store";
 import {
   NewReleaseResponse,
   TrendingAlbumResponse,
@@ -11,13 +13,13 @@ import {
 } from "../../modules/api/album.apis";
 import { recentTracksAction } from "../../redux/stores/recent-tracks.store";
 import {
-  TrendingAlbum,
-  trendingAlbumsAction,
-} from "../../redux/stores/trending-albums.store";
-import {
   RecommendedArtist,
   recommendedArtistsAction,
 } from "../../redux/stores/recommended-artists.store";
+import {
+  TrendingAlbum,
+  trendingAlbumsAction,
+} from "../../redux/stores/trending-albums.store";
 import {
   FeaturedPlaylistResponse,
   fetchFeaturedPlaylist,
@@ -26,33 +28,80 @@ import {
   FeaturedPlaylistItem,
   featuredPlaylistsAction,
 } from "../../redux/stores/featured-playlists.store";
+import { SearchViewController } from "../../views/Search/SearchViewController";
 
-export const InitDataContainer: React.FC<PropsWithChildren> = ({
-  children,
-}) => {
+/**
+ * This component initialize all data required
+ * for the ap too be fully ready to run and display UI
+ * @returns
+ */
+export const AppContainer: React.FC<PropsWithChildren> = ({ children }) => {
   const [resources, setResources] = useState<string[]>([
+    "user-profile",
     "new-releases",
     "trending-albums",
     "featured-playlists",
   ]);
 
-  const [isDone, setDone] = useState<boolean>(false);
+  const [isReady, setReady] = useState<boolean>(false);
   const [errors, setErrors] = useState<Error[]>([]);
 
   const dispatch = useDispatch();
 
-  const {
-    data: newReleases_response,
-    isLoading: newReleases_isLoading,
-    error: newReleases_error,
-  } = useQuery<NewReleaseResponse>(["new-releases"], {
-    queryFn: () => fetchNewRelease(5),
-    staleTime: 60000,
-    cacheTime: 60000,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    retry: true,
-  });
+  const { data: userProfile_response, error: userProfile_error } =
+    useQuery<UserProfileResponse>(["user-profile"], {
+      queryFn: () => getUserProfile(),
+      staleTime: 600000,
+      cacheTime: 600000,
+      refetchOnMount: true,
+      refetchOnWindowFocus: true,
+      retry: true,
+    });
+
+  /**
+   * load the fetched userprofiles into redux
+   */
+  useEffect(() => {
+    if (userProfile_response) {
+      dispatch(MeActions.load(userProfile_response));
+      resources.splice(resources.indexOf("user-profile"), 1);
+      setResources([...resources]);
+    }
+    if (userProfile_error) {
+      errors.push(newReleases_error as Error);
+      setErrors([...errors]);
+    }
+  }, [userProfile_response, userProfile_error]);
+
+  const { data: newReleases_response, error: newReleases_error } =
+    useQuery<NewReleaseResponse>(["new-releases"], {
+      queryFn: () => fetchNewRelease(5),
+      staleTime: 60000,
+      cacheTime: 60000,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      retry: true,
+    });
+
+  /**
+   * load the fetched new-releases into redux
+   */
+  useEffect(() => {
+    if (newReleases_response) {
+      const payloads = newReleases_response.albums.items.map((item) => ({
+        id: item.id,
+        images: item.images,
+        name: item.name,
+      }));
+      dispatch(recentTracksAction.load(payloads));
+      resources.splice(resources.indexOf("new-releases"), 1);
+      setResources([...resources]);
+    }
+    if (newReleases_error) {
+      errors.push(newReleases_error as Error);
+      setErrors([...errors]);
+    }
+  }, [newReleases_response, newReleases_error]);
 
   const { data: availableGenres_response } = useQuery<string[]>(
     ["available-genres"],
@@ -76,38 +125,8 @@ export const InitDataContainer: React.FC<PropsWithChildren> = ({
     enabled: !!genres,
   });
 
-  const {
-    data: featuredPlaylists_response,
-    isLoading: featurePlaylists_isLoading,
-  } = useQuery<FeaturedPlaylistResponse>(["featured-playlists"], {
-    queryFn: () => fetchFeaturedPlaylist(20),
-  });
-
-  /**
-   * Populate New Release resources
-   */
   useEffect(() => {
-    if (!newReleases_isLoading && newReleases_response) {
-      const payloads = newReleases_response.albums.items.map((item) => ({
-        id: item.id,
-        images: item.images,
-        name: item.name,
-      }));
-      dispatch(recentTracksAction.load(payloads));
-      resources.splice(resources.indexOf("new-releases"), 1);
-      setResources([...resources]);
-    }
-    if (newReleases_error) {
-      errors.push(newReleases_error as Error);
-      setErrors([...errors]);
-    }
-  }, [newReleases_response, newReleases_isLoading, newReleases_error]);
-
-  /**
-   * Populate Trending Albums  resources
-   */
-  useEffect(() => {
-    if (!trendingAlbums_isLoading && trendingAlbums_response) {
+    if (trendingAlbums_response) {
       // Holder to populate list of recommended artists
       const artists: RecommendedArtist[] = [];
 
@@ -143,13 +162,15 @@ export const InitDataContainer: React.FC<PropsWithChildren> = ({
       errors.push(trendingAlbums_error as Error);
       setErrors([...errors]);
     }
-  }, [trendingAlbums_response, trendingAlbums_isLoading, trendingAlbums_error]);
+  }, [trendingAlbums_response, trendingAlbums_error]);
 
-  /**
-   * Populate featured playlist resources
-   */
+  const { data: featuredPlaylists_response, error: featuredPlaylists_error } =
+    useQuery<FeaturedPlaylistResponse>(["featured-playlists"], {
+      queryFn: () => fetchFeaturedPlaylist(20),
+    });
+
   useEffect(() => {
-    if (!featurePlaylists_isLoading && featuredPlaylists_response) {
+    if (featuredPlaylists_response) {
       const playlists: FeaturedPlaylistItem[] =
         featuredPlaylists_response.playlists.items.map((item) => ({
           id: item.id,
@@ -162,17 +183,26 @@ export const InitDataContainer: React.FC<PropsWithChildren> = ({
       resources.splice(resources.indexOf("featured-playlists"), 1);
       setResources([...resources]);
     }
-  }, [featuredPlaylists_response, featurePlaylists_isLoading]);
+    if (featuredPlaylists_error) {
+      errors.push(trendingAlbums_error as Error);
+      setErrors([...errors]);
+    }
+  }, [featuredPlaylists_response, featuredPlaylists_error]);
 
   useEffect(() => {
-    if (resources.length === 0) {
-      setDone(true);
+    if (resources.length === 0 && errors.length === 0) {
+      setReady(true);
       SplashScreen.hideAsync();
     }
-  }, [resources]);
+  }, [resources, errors]);
 
-  if (!isDone) {
+  if (!isReady) {
     return null;
   }
-  return <>{children}</>;
+  return (
+    <>
+      <SearchViewController />
+      {children}
+    </>
+  );
 };

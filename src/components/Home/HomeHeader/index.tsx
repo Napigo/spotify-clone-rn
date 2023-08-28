@@ -9,7 +9,7 @@ import {
   STANDARD_TOPBAR_HEIGHT,
   TOP_BAR_ICON_SIZE,
 } from "../../../theme/constants";
-import { useAuth } from "../../../containers/App/AuthContainer";
+import { useAuth } from "../../../containers/Auth";
 
 export const HomeHeader: React.FC = () => {
   const styles = useStyles();
