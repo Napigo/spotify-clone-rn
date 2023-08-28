@@ -26,14 +26,16 @@ export const AlbumItem: React.FC<TrendingAlbum> = ({
   );
 };
 
+const ITEM_WIDTH = 170;
+
 const useStyles = () => {
   const { scheme } = useThemeColors();
 
   return StyleSheet.create({
     container: {
+      height: ITEM_WIDTH + 50,
+      width: ITEM_WIDTH,
       flexDirection: "column",
-      height: "100%",
-      width: "100%",
     },
     image: {
       width: "100%",

@@ -1,12 +1,10 @@
 import React from "react";
-import { useThemeColors } from "../../../theme/ThemeProvider";
 import { StyleSheet, View } from "react-native";
 import { UIText } from "../../common/UIText";
 import { Image } from "expo-image";
 import { FeaturedPlaylistItem } from "../../../redux/stores/featured-playlists.store";
 
 export const PlaylistItem: React.FC<FeaturedPlaylistItem> = ({
-  name,
   photoCover,
   description,
 }) => {
@@ -23,14 +21,14 @@ export const PlaylistItem: React.FC<FeaturedPlaylistItem> = ({
   );
 };
 
-const useStyles = () => {
-  const { scheme } = useThemeColors();
+const ITEM_WIDTH = 170;
 
+const useStyles = () => {
   return StyleSheet.create({
     container: {
       flexDirection: "column",
-      height: "100%",
-      width: "100%",
+      height: ITEM_WIDTH + 50,
+      width: ITEM_WIDTH,
     },
     image: {
       width: "100%",
