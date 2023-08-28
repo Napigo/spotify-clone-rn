@@ -46,7 +46,7 @@ export const CategoryList: React.FC = () => {
       </View>
       {isReady ? (
         <Animated.View entering={FadeIn} style={{ flex: 1, gap: GUTTER }}>
-          {lists.map((item, index) => (
+          {lists.map((item) => (
             <View key={`${uniqueId()}-category-row`} style={styles.row}>
               {item.map((col) => (
                 <View

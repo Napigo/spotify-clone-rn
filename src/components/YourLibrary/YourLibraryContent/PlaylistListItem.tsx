@@ -8,7 +8,7 @@ import { UIText } from "../../common/UIText";
 import { capitalize } from "lodash";
 
 type PlaylistListItemProps = CurrentUserPlaylist;
-export const PlaylistListItem: React.FC<PlaylistListItemProps> = ({
+const Component: React.FC<PlaylistListItemProps> = ({
   name,
   images,
   ownerName,
@@ -30,7 +30,7 @@ export const PlaylistListItem: React.FC<PlaylistListItemProps> = ({
   }, [images, assets]);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.cell}>
       <View style={styles.imageContainer}>
         <Image source={imageUrl} style={{ flex: 1 }} />
       </View>
@@ -46,14 +46,24 @@ export const PlaylistListItem: React.FC<PlaylistListItemProps> = ({
   );
 };
 
+export const PlaylistListItem = React.memo(Component);
+
+const ITEM_HEIGHT = 70;
+
 const useStyles = () => {
   const { scheme } = useThemeColors();
 
   return StyleSheet.create({
+    cell: {
+      height: ITEM_HEIGHT,
+      width: "100%",
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 10,
+    },
     container: {
       height: "100%",
       width: "100%",
-      //   backgroundColor: scheme.primary,
       flexDirection: "row",
       alignItems: "center",
       gap: 10,
@@ -61,7 +71,6 @@ const useStyles = () => {
     imageContainer: {
       height: "100%",
       aspectRatio: 1,
-      backgroundColor: "blue",
       overflow: "hidden",
     },
     textContainer: {

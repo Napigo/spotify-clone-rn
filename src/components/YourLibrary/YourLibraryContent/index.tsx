@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { useThemeColors } from "../../../theme/ThemeProvider";
 import { uniqueId } from "lodash";
@@ -23,18 +23,12 @@ export const YourLibraryContent: React.FC = () => {
     (state: AppState) => state.CurrentUserPlaylistsStore
   );
 
-  const renderItem = useCallback(({ item }: RenderItemProps) => {
-    return (
-      <View style={styles.item}>
-        <PlaylistListItem {...item} />
-      </View>
-    );
-  }, []);
-
   return (
     <View style={styles.container}>
       <FlatList
-        renderItem={renderItem}
+        renderItem={({ item }: RenderItemProps) => (
+          <PlaylistListItem {...item} />
+        )}
         data={playlists}
         initialNumToRender={30}
         maxToRenderPerBatch={30}
@@ -50,8 +44,6 @@ export const YourLibraryContent: React.FC = () => {
   );
 };
 
-const ITEM_HEIGHT = 70;
-
 const useStyles = () => {
   const { scheme } = useThemeColors();
   return StyleSheet.create({
@@ -59,10 +51,6 @@ const useStyles = () => {
       flex: 1,
       height: "100%",
       backgroundColor: scheme.systemBackground,
-    },
-    item: {
-      height: ITEM_HEIGHT,
-      width: "100%",
     },
     seperator: {
       height: 18,
