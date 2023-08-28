@@ -28,11 +28,12 @@ const useStyles = () => {
   const { scheme } = useThemeColors();
   return StyleSheet.create({
     container: {
-      height: 40,
+      height: 50,
       width: "100%",
       backgroundColor: scheme.systemBackground,
       flexDirection: "row",
       alignItems: "flex-start",
+      paddingTop: 10,
       justifyContent: "space-between",
     },
     sortButton: {

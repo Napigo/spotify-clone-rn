@@ -51,6 +51,7 @@ const useStyles = () => {
       shadowOpacity: 0.2,
       shadowRadius: 5.62,
       elevation: 8,
+      zIndex: 100,
     },
   });
 };

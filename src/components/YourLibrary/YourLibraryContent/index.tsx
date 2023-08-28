@@ -10,7 +10,6 @@ import { ListHeader } from "./ListHeader";
 import { useSelector } from "react-redux";
 import { AppState } from "../../../redux/app-store";
 import { CurrentUserPlaylist } from "../../../redux/stores/user-playlists.store";
-import { UIText } from "../../common/UIText";
 import { PlaylistListItem } from "./PlaylistListItem";
 
 type RenderItemProps = {
@@ -51,7 +50,7 @@ export const YourLibraryContent: React.FC = () => {
   );
 };
 
-const ITEM_HEIGHT = 60;
+const ITEM_HEIGHT = 70;
 
 const useStyles = () => {
   const { scheme } = useThemeColors();
