@@ -73,7 +73,7 @@ const useStyles = () => {
       top: 0,
       width: "100%",
       backgroundColor: SHARE_COLOR,
-      zIndex: 1000,
+      zIndex: 1,
       overflow: "hidden",
       flexDirection: "row",
       alignItems: "flex-start",

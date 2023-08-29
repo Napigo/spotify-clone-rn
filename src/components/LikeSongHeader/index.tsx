@@ -58,7 +58,7 @@ export const LikeSongHeader: React.FC<LikedSongHeaderProps> = ({
 
   const topHeaderAnimationStyles = useAnimatedStyle(() => {
     return {
-      opacity: interpolate(_scrollY.value, [-1, 0, 30], [1, 1, 0]),
+      opacity: interpolate(_scrollY.value, [-1, 0, 50], [1, 1, 0]),
     };
   });
 
@@ -104,6 +104,7 @@ export const LikeSongHeader: React.FC<LikedSongHeaderProps> = ({
           </UIText>
         </UIPressable>
       </Animated.View>
+
       <View style={styles.contentBox}>
         <Animated.View style={[mainTitleAnimationStyle]}>
           <UIText level="title2" style={styles.mainTitle}>
@@ -129,9 +130,6 @@ export const LikeSongHeader: React.FC<LikedSongHeaderProps> = ({
                 size={34}
                 color={styles.iconTint.color}
               />
-            </UIPressable>
-            <UIPressable style={styles.playButton}>
-              <FontAwesome name="play" size={20} color="black" />
             </UIPressable>
           </View>
         </View>
@@ -194,17 +192,9 @@ const useStyles = () => {
       flexDirection: "row",
       alignItems: "center",
       gap: 15,
+      marginRight: 50 + 10,
     },
-    playButton: {
-      height: 50,
-      aspectRatio: 1,
-      borderRadius: borderRadius.full,
-      backgroundColor: scheme.primary,
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center",
-      paddingLeft: 3,
-    },
+
     topHeader: {
       position: "absolute",
       top: 100,

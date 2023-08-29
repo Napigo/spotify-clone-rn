@@ -9,15 +9,17 @@ import {
 } from "../../theme/constants";
 import Animated, {
   useAnimatedScrollHandler,
+  useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
 import { LikeSongHeader } from "../../components/LikeSongHeader";
 import { LikedSongsTopbar } from "../../components/LikeSongHeader/TopBar";
 import { UIPressable } from "../../components/common/UIPressable";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { HomeStackParamList } from "../../navigations/types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { borderRadius } from "../../theme/radius";
 
 export const LikedSongsView: React.FC = () => {
   const styles = useStyles();
@@ -30,6 +32,20 @@ export const LikedSongsView: React.FC = () => {
 
   const scrollHandler = useAnimatedScrollHandler((event) => {
     translationY.value = event.contentOffset.y;
+  });
+
+  const buttonPlayAnimationStyle = useAnimatedStyle(() => {
+    const threshold = offset.bottom + STANDARD_TOPBAR_HEIGHT;
+    const fixedPosition = threshold + 50;
+    const sticky = translationY.value >= fixedPosition;
+
+    return {
+      transform: [
+        {
+          translateY: sticky ? -fixedPosition : -translationY.value,
+        },
+      ],
+    };
   });
 
   return (
@@ -57,6 +73,13 @@ export const LikedSongsView: React.FC = () => {
       >
         <Ionicons name="chevron-back" size={23} color={"white"} />
       </UIPressable>
+      <Animated.View
+        style={[buttonPlayAnimationStyle, styles.buttonPlayContainer]}
+      >
+        <UIPressable style={styles.playButton}>
+          <FontAwesome name="play" size={20} color="black" />
+        </UIPressable>
+      </Animated.View>
       <LikedSongsTopbar _scrollY={translationY} />
       <LikeSongHeader _scrollY={translationY} />
     </View>
@@ -89,6 +112,22 @@ const useStyles = () => {
       position: "absolute",
       left: SCREEN_EDGE_SPACING,
       zIndex: 2000,
+    },
+    buttonPlayContainer: {
+      position: "absolute",
+      top: LIKED_SONGS_VIEW_HEADER_HEIGHT - 60,
+      right: SCREEN_EDGE_SPACING,
+      zIndex: 2000,
+    },
+    playButton: {
+      height: 50,
+      aspectRatio: 1,
+      borderRadius: borderRadius.full,
+      backgroundColor: scheme.primary,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingLeft: 3,
     },
   });
 };
