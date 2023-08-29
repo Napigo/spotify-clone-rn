@@ -20,6 +20,7 @@ import {
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import { borderRadius } from "../../theme/radius";
+import { hexToRGBA } from "../../utils/utils";
 
 const SHARE_COLOR = "#046951";
 
@@ -55,6 +56,12 @@ export const LikeSongHeader: React.FC<LikedSongHeaderProps> = ({
     };
   });
 
+  const topHeaderAnimationStyles = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(_scrollY.value, [-1, 0, 50], [1, 1, 0]),
+    };
+  });
+
   return (
     <Animated.View
       entering={FadeIn.delay(100).duration(300)}
@@ -69,6 +76,29 @@ export const LikeSongHeader: React.FC<LikedSongHeaderProps> = ({
       />
 
       <View style={styles.contentBox}>
+        <Animated.View style={[styles.topHeader, topHeaderAnimationStyles]}>
+          <UIPressable
+            style={[
+              styles.searchInput,
+              { backgroundColor: hexToRGBA(SHARE_COLOR, 0.5) },
+            ]}
+          >
+            <Ionicons name="search" size={20} color={styles.iconTint.color} />
+            <UIText level="caption" style={styles.inputPlaceholder}>
+              Find in liked songs
+            </UIText>
+          </UIPressable>
+          <UIPressable
+            style={[
+              styles.sortButton,
+              { backgroundColor: hexToRGBA(SHARE_COLOR, 0.5) },
+            ]}
+          >
+            <UIText level="caption" style={styles.inputPlaceholder}>
+              Sort
+            </UIText>
+          </UIPressable>
+        </Animated.View>
         <UIText level="title2" style={styles.mainTitle}>
           Liked Songs
         </UIText>
@@ -165,6 +195,35 @@ const useStyles = () => {
       alignItems: "center",
       justifyContent: "center",
       paddingLeft: 3,
+    },
+    topHeader: {
+      width: "100%",
+      height: 45,
+      // backgroundColor: "blue",
+      flexDirection: "row",
+      alignItems: "center",
+      paddingBottom: 10,
+      gap: 10,
+    },
+    searchInput: {
+      height: "100%",
+      flex: 1,
+      borderRadius: borderRadius.sm,
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 10,
+      gap: 7,
+    },
+    sortButton: {
+      height: "100%",
+      width: 70,
+      borderRadius: borderRadius.sm,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    inputPlaceholder: {
+      fontWeight: "600",
     },
   });
 };
