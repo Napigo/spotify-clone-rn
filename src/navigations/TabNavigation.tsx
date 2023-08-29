@@ -2,13 +2,13 @@ import React, { useCallback } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as Haptics from "expo-haptics";
 import { TabStackParamList } from "./types";
-import { HomeView } from "../views/Home";
 import { TabBarIcon } from "../components/Navigations/TabBarIcon";
 import { UIText } from "../components/common/UIText";
 import { useThemeColors } from "../theme/ThemeProvider";
 import { StyleSheet } from "react-native";
 import { SearchView } from "../views/Search";
-import { LibraryView } from "../views/Library";
+import { LibraryNavigation } from "./LibraryNavigation";
+import { HomeNavigation } from "./HomeNavigation";
 
 const Tab = createBottomTabNavigator<TabStackParamList>();
 
@@ -47,7 +47,7 @@ export const TabNavigation: React.FC = () => {
     >
       <Tab.Screen
         name="Home"
-        component={HomeView}
+        component={HomeNavigation}
         options={{ title: "Home" }}
         listeners={() => ({
           tabPress: runHaptics,
@@ -63,7 +63,7 @@ export const TabNavigation: React.FC = () => {
       />
       <Tab.Screen
         name="Library"
-        component={LibraryView}
+        component={LibraryNavigation}
         options={{
           title: "Library",
         }}

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { useThemeColors } from "../../../theme/ThemeProvider";
 import { borderRadius } from "../../../theme/radius";
 import { Image } from "expo-image";
@@ -19,7 +19,7 @@ export const RecentItem: React.FC<RecentItemProps> = ({
   const styles = useStyles();
 
   return (
-    <UIPressable style={styles.container}>
+    <UIPressable style={styles.container} onPress={onPress}>
       <Image source={coverImage} style={styles.image} />
       <UIText level="subhead" style={styles.label} numberOfLines={2}>
         {label}

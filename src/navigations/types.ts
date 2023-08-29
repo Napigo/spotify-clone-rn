@@ -12,11 +12,20 @@ export type CoreStackParamList = {
 };
 
 export type TabStackParamList = {
-  Home: undefined;
+  Home: SubNavigator<HomeStackParamList>;
   Search: undefined;
-  Library: undefined;
+  Library: SubNavigator<HomeStackParamList>;
 };
 
+export type HomeStackParamList = {
+  Root: undefined;
+  LikedSongs: undefined;
+};
+
+export type LibraryStackParamList = {
+  Root: undefined;
+  LikedSongs: undefined;
+};
 /**
  *
  */

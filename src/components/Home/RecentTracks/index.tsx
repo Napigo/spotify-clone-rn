@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import { RecentItem } from "./RecentItem";
 import { useAssets } from "expo-asset";
@@ -7,9 +7,13 @@ import { AppState } from "../../../redux/app-store";
 import { ReleaseItem } from "../../../modules/api/album.apis";
 import { chunk, uniqueId } from "lodash";
 import { SCREEN_EDGE_SPACING } from "../../../theme/constants";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { HomeStackParamList } from "../../../navigations/types";
 
 const Component: React.FC = () => {
   const styles = useStyles();
+
+  const { navigate } = useNavigation<NavigationProp<HomeStackParamList>>();
 
   const { isReady, data } = useSelector(
     (state: AppState) => state.RecentTracksStore
@@ -32,6 +36,12 @@ const Component: React.FC = () => {
       : [];
   }, [isReady, data, assets]);
 
+  const handleItemOnPressed = useCallback((id: string, name: string) => {
+    if (name === "Liked Songs") {
+      navigate("LikedSongs");
+    }
+  }, []);
+
   return (
     <View style={styles.container}>
       {viewModels.length > 0 &&
@@ -42,7 +52,7 @@ const Component: React.FC = () => {
                 <RecentItem
                   coverImage={item.images[0].url}
                   label={item.name}
-                  onPress={() => {}}
+                  onPress={() => handleItemOnPressed(item.id, item.name)}
                 />
               </View>
             ))}
