@@ -62,6 +62,12 @@ export const LikeSongHeader: React.FC<LikedSongHeaderProps> = ({
     };
   });
 
+  const mainTitleAnimationStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(_scrollY.value, [-1, 80, 110], [1, 1, 0]),
+    };
+  });
+
   return (
     <Animated.View
       entering={FadeIn.delay(100).duration(300)}
@@ -99,12 +105,15 @@ export const LikeSongHeader: React.FC<LikedSongHeaderProps> = ({
         </UIPressable>
       </Animated.View>
       <View style={styles.contentBox}>
-        <UIText level="title2" style={styles.mainTitle}>
-          Liked Songs
-        </UIText>
-        <UIText level="subhead" style={styles.metadata}>
-          1,256 songs
-        </UIText>
+        <Animated.View style={[mainTitleAnimationStyle]}>
+          <UIText level="title2" style={styles.mainTitle}>
+            Liked Songs
+          </UIText>
+          <UIText level="subhead" style={styles.metadata}>
+            1,256 songs
+          </UIText>
+        </Animated.View>
+
         <View style={styles.controls}>
           <UIPressable>
             <MaterialCommunityIcons
@@ -198,7 +207,7 @@ const useStyles = () => {
     },
     topHeader: {
       position: "absolute",
-      top: 80,
+      top: 100,
       width: "100%",
       height: 45,
       flexDirection: "row",
