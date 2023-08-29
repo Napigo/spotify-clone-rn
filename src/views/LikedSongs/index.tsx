@@ -1,25 +1,16 @@
 import React from "react";
 import { useThemeColors } from "../../theme/ThemeProvider";
-import { FlatList, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { uniqueId } from "lodash";
-import { LinearGradient } from "expo-linear-gradient";
-import { ListHeader } from "./Components/ListHeader";
-import {
-  LIKED_SONGS_VIEW_HEADER_HEIGHT,
-  SCREEN_EDGE_SPACING,
-  SCREEN_HEIGHT,
-} from "../../theme/constants";
+import { LIKED_SONGS_VIEW_HEADER_HEIGHT } from "../../theme/constants";
 import Animated, {
-  interpolate,
   useAnimatedScrollHandler,
-  useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
-import { ListHeaderV2 } from "./Components/ListHeaderV2";
+import { LikeSongHeader } from "../../components/LikeSongHeader";
 
 export const LikedSongsView: React.FC = () => {
   const styles = useStyles();
-  const { scheme } = useThemeColors();
 
   const translationY = useSharedValue(0);
 
@@ -27,32 +18,10 @@ export const LikedSongsView: React.FC = () => {
     translationY.value = event.contentOffset.y;
   });
 
-  const animatedStyles = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateY: interpolate(
-            translationY.value,
-            [-1, 0, LIKED_SONGS_VIEW_HEADER_HEIGHT],
-            [0, 0, -LIKED_SONGS_VIEW_HEADER_HEIGHT]
-          ),
-        },
-      ],
-      height: interpolate(
-        translationY.value,
-        [-LIKED_SONGS_VIEW_HEADER_HEIGHT, 0, 1],
-        [
-          LIKED_SONGS_VIEW_HEADER_HEIGHT * 2,
-          LIKED_SONGS_VIEW_HEADER_HEIGHT,
-          LIKED_SONGS_VIEW_HEADER_HEIGHT,
-        ]
-      ),
-    };
-  });
-
   return (
     <View style={styles.container}>
       <Animated.FlatList
+        showsVerticalScrollIndicator={false}
         scrollEventThrottle={1}
         onScroll={scrollHandler}
         bounces={true}
@@ -65,9 +34,7 @@ export const LikedSongsView: React.FC = () => {
         ItemSeparatorComponent={() => <View style={styles.seperator} />}
         contentContainerStyle={styles.flatlistStyle}
       />
-      <Animated.View style={[styles.header, animatedStyles]}>
-        <ListHeaderV2 />
-      </Animated.View>
+      <LikeSongHeader _scrollY={translationY} />
     </View>
   );
 };
@@ -79,31 +46,20 @@ const useStyles = () => {
       flex: 1,
     },
     cell: {
-      // backgroundColor: scheme.secondaryBackground,
-      // borderWidth: 1,
-      // borderColor: "grey",
+      backgroundColor: scheme.systemBackground,
       height: 60,
       width: "100%",
       borderRadius: 10,
-      zIndex: 100,
+      borderWidth: 1,
+      borderColor: scheme.secondaryBackground,
     },
     seperator: {
       height: 10,
     },
     flatlistStyle: {
-      paddingTop: LIKED_SONGS_VIEW_HEADER_HEIGHT,
+      paddingTop: LIKED_SONGS_VIEW_HEADER_HEIGHT + 30,
       paddingBottom: 100,
       backgroundColor: scheme.systemBackground,
-    },
-    header: {
-      position: "absolute",
-      flex: 1,
-      top: 0,
-      left: 0,
-      bottom: 0,
-      right: 0,
-      height: LIKED_SONGS_VIEW_HEADER_HEIGHT,
-      width: "100%",
     },
   });
 };
