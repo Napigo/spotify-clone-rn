@@ -1,23 +1,22 @@
 import React, { useMemo } from "react";
-import { useThemeColors } from "../../../theme/ThemeProvider";
+import { LibraryPlaylist } from "../../../../redux/stores/user-library.store";
+import { useThemeColors } from "../../../../theme/ThemeProvider";
 import { StyleSheet, View } from "react-native";
-import { CurrentUserPlaylist } from "../../../redux/stores/user-playlists.store";
-import { Image } from "expo-image";
 import { useAssets } from "expo-asset";
-import { UIText } from "../../common/UIText";
+import { Image } from "expo-image";
+import { UIText } from "../../../common/UIText";
 import { capitalize } from "lodash";
 
-type PlaylistListItemProps = CurrentUserPlaylist;
-const Component: React.FC<PlaylistListItemProps> = ({
-  name,
-  images,
-  ownerName,
+const Component: React.FC<LibraryPlaylist> = ({
   type,
+  name,
+  ownerName,
+  images,
 }) => {
   const styles = useStyles();
 
   const [assets] = useAssets([
-    require("../../../../assets/images/playlist-cover.png"),
+    require("../../../../../assets/images/playlist-cover.png"),
   ]);
 
   const imageUrl = useMemo(() => {
@@ -30,7 +29,7 @@ const Component: React.FC<PlaylistListItemProps> = ({
   }, [images, assets]);
 
   return (
-    <View style={styles.cell}>
+    <>
       <View style={styles.imageContainer}>
         <Image source={imageUrl} style={{ flex: 1 }} />
       </View>
@@ -42,32 +41,15 @@ const Component: React.FC<PlaylistListItemProps> = ({
           {capitalize(type)} . {ownerName}
         </UIText>
       </View>
-    </View>
+    </>
   );
 };
 
-export const PlaylistListItem = React.memo(Component);
-
-const ITEM_HEIGHT = 70;
+export const PlaylistCell = React.memo(Component);
 
 const useStyles = () => {
   const { scheme } = useThemeColors();
-
   return StyleSheet.create({
-    cell: {
-      height: ITEM_HEIGHT,
-      width: "100%",
-      flexDirection: "row",
-      alignItems: "center",
-      gap: 10,
-    },
-    container: {
-      height: "100%",
-      width: "100%",
-      flexDirection: "row",
-      alignItems: "center",
-      gap: 10,
-    },
     imageContainer: {
       height: "100%",
       aspectRatio: 1,

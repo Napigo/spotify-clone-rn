@@ -9,30 +9,28 @@ import {
 import { ListHeader } from "./ListHeader";
 import { useSelector } from "react-redux";
 import { AppState } from "../../../redux/app-store";
-import { CurrentUserPlaylist } from "../../../redux/stores/user-playlists.store";
-import { PlaylistListItem } from "./PlaylistListItem";
+import { LibraryItem } from "../../../redux/stores/user-library.store";
+import { LibraryItemCard } from "./LibraryItemCard";
 
 type RenderItemProps = {
-  item: CurrentUserPlaylist;
+  item: LibraryItem;
 };
 
 export const YourLibraryContent: React.FC = () => {
   const styles = useStyles();
 
-  const { playlists } = useSelector(
-    (state: AppState) => state.CurrentUserPlaylistsStore
-  );
+  const { items } = useSelector((state: AppState) => state.UserLibraryStore);
 
   return (
     <View style={styles.container}>
       <FlatList
         renderItem={({ item }: RenderItemProps) => (
-          <PlaylistListItem {...item} />
+          <LibraryItemCard {...item} />
         )}
-        data={playlists}
+        data={items}
         initialNumToRender={30}
         maxToRenderPerBatch={30}
-        keyExtractor={(item) => `${item.id} - ${uniqueId()}`}
+        keyExtractor={(item) => `${item.data.id} - ${uniqueId()}`}
         contentContainerStyle={{
           paddingHorizontal: SCREEN_EDGE_SPACING,
           paddingBottom: BOTTOM_TABBAR_HEIGHT + 50,

@@ -31,6 +31,7 @@ import {
 import { SearchViewController } from "../../views/Search/SearchViewController";
 import { SavedTracksController } from "../../views/Library/SavedTracksController";
 import { UserPlaylistController } from "../../views/Library/UserPlaylistsController";
+import { LibraryController } from "../../views/Library/LibraryController";
 
 /**
  * This component initialize all data required
@@ -205,6 +206,7 @@ export const AppContainer: React.FC<PropsWithChildren> = ({ children }) => {
     <>
       <SearchViewController />
       <SavedTracksController />
+      <LibraryController />
       <UserPlaylistController />
       {children}
     </>
