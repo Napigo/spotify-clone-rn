@@ -7,10 +7,9 @@ import { Ionicons } from "@expo/vector-icons";
 import {
   SCREEN_EDGE_SPACING,
   STANDARD_TOPBAR_HEIGHT,
+  TOP_BAR_ICON_SIZE,
 } from "../../../theme/constants";
-import { useAuth } from "../../../containers/App/AuthContainer";
-
-const ICON_SIZE = 26;
+import { useAuth } from "../../../containers/Auth";
 
 export const HomeHeader: React.FC = () => {
   const styles = useStyles();
@@ -39,21 +38,21 @@ export const HomeHeader: React.FC = () => {
         <UIPressable onPress={() => logout()}>
           <Ionicons
             name="notifications-outline"
-            size={ICON_SIZE}
+            size={TOP_BAR_ICON_SIZE}
             color={styles.icon.color}
           />
         </UIPressable>
         <UIPressable>
           <Ionicons
             name="timer-outline"
-            size={ICON_SIZE}
+            size={TOP_BAR_ICON_SIZE}
             color={styles.icon.color}
           />
         </UIPressable>
         <UIPressable>
           <Ionicons
             name="settings-outline"
-            size={ICON_SIZE}
+            size={TOP_BAR_ICON_SIZE}
             color={styles.icon.color}
           />
         </UIPressable>

@@ -130,3 +130,59 @@ export async function fetchTrendingAlbums(
     });
   }
 }
+
+export interface CurrentUserSavedAlbumReponse {
+  href: string;
+  limit: number;
+  next: string;
+  offset: number;
+  previous: string;
+  total: number;
+  items: UserSavedAlbumObject[];
+}
+
+export interface UserSavedAlbumObject {
+  album: {
+    album_type: string;
+    total_tracks: number;
+    href: string;
+    id: string;
+    images: IImage[];
+    name: string;
+    type: string;
+    uri: string;
+    genres: string[];
+    label: string;
+    artists: {
+      id: string;
+      images: IImage[];
+      name: string;
+    }[];
+  };
+}
+
+export async function fetchCurrentUserSavedAlbums(
+  limit = 20,
+  offset = 0
+): Promise<CurrentUserSavedAlbumReponse> {
+  try {
+    const response = await apis.callApi({
+      url: `v1/me/albums?limit=${limit}&offset=${offset}`,
+      method: "get",
+    });
+
+    if (response.status === 200 && response.data) {
+      return response.data;
+    }
+    return Promise.reject({
+      code: response.status,
+      data: response.data,
+    });
+  } catch (err) {
+    const error = err as AxiosResponse;
+    return Promise.reject({
+      code: error.status,
+      data: error.data,
+    });
+  }
+}

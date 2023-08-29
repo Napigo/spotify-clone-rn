@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { AppState } from "../../../redux/app-store";
 import { FlatList, StyleSheet, View } from "react-native";
@@ -18,14 +18,6 @@ export const FeaturedPlaylist: React.FC = () => {
     (state: AppState) => state.FeaturedPlaylistsStore
   );
 
-  const renderItem = useCallback(({ item }: RenderItemProps) => {
-    return (
-      <View style={styles.item}>
-        <PlaylistItem {...item} />
-      </View>
-    );
-  }, []);
-
   if (!isReady) {
     return null;
   }
@@ -33,7 +25,7 @@ export const FeaturedPlaylist: React.FC = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        renderItem={renderItem}
+        renderItem={({ item }: RenderItemProps) => <PlaylistItem {...item} />}
         horizontal
         data={playlists}
         showsHorizontalScrollIndicator={false}
@@ -47,7 +39,6 @@ export const FeaturedPlaylist: React.FC = () => {
   );
 };
 
-const ITEM_WIDTH = 170;
 const useStyles = () => {
   const { scheme } = useThemeColors();
   return StyleSheet.create({
@@ -55,10 +46,6 @@ const useStyles = () => {
       flex: 1,
       height: "100%",
       backgroundColor: scheme.systemBackground,
-    },
-    item: {
-      height: ITEM_WIDTH + 50,
-      width: ITEM_WIDTH,
     },
     seperator: {
       width: 18,

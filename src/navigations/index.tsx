@@ -3,8 +3,8 @@ import { useThemeColors } from "../theme/ThemeProvider";
 import { NavigationContainer, Theme } from "@react-navigation/native";
 import { CoreNavigation } from "./CoreNavigation";
 import { AuthNavigation } from "./AuthNavigation";
-import { useAuth } from "../containers/App/AuthContainer";
-import { InitDataContainer } from "../containers/App/InitDataContainer";
+import { useAuth } from "../containers/Auth";
+import { AppContainer } from "../containers/App";
 
 export const AppNavigation: React.FC = () => {
   const { scheme } = useThemeColors();
@@ -29,9 +29,9 @@ export const AppNavigation: React.FC = () => {
   return (
     <NavigationContainer theme={appTheme}>
       {isAuthenticated ? (
-        <InitDataContainer>
+        <AppContainer>
           <CoreNavigation />
-        </InitDataContainer>
+        </AppContainer>
       ) : (
         <AuthNavigation />
       )}

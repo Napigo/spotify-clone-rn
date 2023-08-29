@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { AppState } from "../../../redux/app-store";
 import { useThemeColors } from "../../../theme/ThemeProvider";
@@ -21,14 +21,6 @@ export const RecommendedArtists: React.FC = () => {
 
   usePopulateArtistPhotos(artists.map((item) => item.id));
 
-  const renderItem = useCallback(({ item }: RenderItemProps) => {
-    return (
-      <View style={styles.item}>
-        <ArtistItem {...item} />
-      </View>
-    );
-  }, []);
-
   if (!isReady) {
     return null;
   }
@@ -36,7 +28,7 @@ export const RecommendedArtists: React.FC = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        renderItem={renderItem}
+        renderItem={({ item }: RenderItemProps) => <ArtistItem {...item} />}
         horizontal
         data={artists}
         showsHorizontalScrollIndicator={false}
@@ -50,7 +42,6 @@ export const RecommendedArtists: React.FC = () => {
   );
 };
 
-const ITEM_WIDTH = 130;
 const useStyles = () => {
   const { scheme } = useThemeColors();
 
@@ -59,10 +50,6 @@ const useStyles = () => {
       flex: 1,
       height: "auto",
       backgroundColor: scheme.systemBackground,
-    },
-    item: {
-      height: ITEM_WIDTH + 50,
-      width: ITEM_WIDTH,
     },
     seperator: {
       width: 18,

@@ -1,6 +1,6 @@
 import React from "react";
 import { Feather, Ionicons } from "@expo/vector-icons";
-import { useThemeColors } from "../../theme/ThemeProvider";
+import { useThemeColors } from "../../../theme/ThemeProvider";
 
 type TabIconProps = {
   name: string;

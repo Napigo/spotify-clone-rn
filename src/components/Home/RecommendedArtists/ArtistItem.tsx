@@ -43,14 +43,15 @@ export const ArtistItem: React.FC<ArtistItemProps> = ({
   );
 };
 
+const ITEM_WIDTH = 130;
+
 const useStyles = () => {
   const { scheme } = useThemeColors();
   return StyleSheet.create({
     container: {
       flexDirection: "column",
-      height: "100%",
-      width: "100%",
-      //   justifyContent: "center",
+      height: ITEM_WIDTH + 50,
+      width: ITEM_WIDTH,
       alignItems: "center",
       gap: 10,
     },

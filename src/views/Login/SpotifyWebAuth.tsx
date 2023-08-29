@@ -7,7 +7,7 @@ import { UIPressable } from "../../components/common/UIPressable";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { createAuthorizationURL, handleAuthRedirect } from "../../modules/auth";
 import { AuthStackParamList } from "../../navigations/types";
-import { useAuth } from "../../containers/App/AuthContainer";
+import { useAuth } from "../../containers/Auth";
 
 export const SpotifyWebAuthview: React.FC = () => {
   const styles = useStyles();

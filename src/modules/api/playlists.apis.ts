@@ -74,3 +74,59 @@ export async function fetchCategoryPlaylist(
     });
   }
 }
+
+export interface CurrentUserPlaylistsResponse {
+  href: string;
+  limit: number;
+  next: string;
+  offset: number;
+  previous: string;
+  total: number;
+  items: UserPlaylistObject[];
+}
+
+export interface UserPlaylistObject {
+  description: string;
+  href: string;
+  id: string;
+  images: IImage[];
+  name: string;
+  owner: {
+    id: string;
+    display_name: string;
+  };
+  public: boolean;
+  tracks: {
+    href: string;
+    total: number;
+  };
+  type: string;
+  uri: string;
+}
+
+export async function fetchCurrentUserPlaylists(
+  limit = 20,
+  offset = 0
+): Promise<CurrentUserPlaylistsResponse> {
+  try {
+    const response = await apis.callApi({
+      url: `v1/me/playlists?offset=${offset}&limit=${limit}`,
+      method: "get",
+    });
+
+    if (response.status === 200 && response.data) {
+      return response.data;
+    } else {
+      return Promise.reject({
+        code: response.status,
+        data: response.data,
+      });
+    }
+  } catch (err) {
+    const error = err as AxiosError;
+    return Promise.reject({
+      code: error.code,
+      data: error.response?.data,
+    });
+  }
+}
