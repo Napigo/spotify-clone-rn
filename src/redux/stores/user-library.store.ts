@@ -29,7 +29,7 @@ export type LibraryAlbum = {
 export type LibraryArtist = {
   id: string;
   name: string;
-  images: IImage[];
+  photoCover: string;
 };
 
 interface UserLibraryState {

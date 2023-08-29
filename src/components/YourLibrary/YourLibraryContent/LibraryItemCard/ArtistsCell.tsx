@@ -6,8 +6,9 @@ import { useAssets } from "expo-asset";
 import { Image } from "expo-image";
 import { borderRadius } from "../../../../theme/radius";
 import { UIText } from "../../../common/UIText";
+import { isEmpty } from "lodash";
 
-const Component: React.FC<LibraryArtist> = ({ id, name, images }) => {
+const Component: React.FC<LibraryArtist> = ({ id, name, photoCover }) => {
   const styles = useStyles();
 
   const [assets] = useAssets([
@@ -16,12 +17,12 @@ const Component: React.FC<LibraryArtist> = ({ id, name, images }) => {
 
   const imageUrl = useMemo(() => {
     if (assets) {
-      if (images && images.length > 0) {
-        return images[0].url ?? assets[0].uri;
+      if (!isEmpty(photoCover)) {
+        return photoCover;
       }
       return assets[0].uri;
     }
-  }, [images, assets]);
+  }, [photoCover, assets]);
 
   return (
     <>

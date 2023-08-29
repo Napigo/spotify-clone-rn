@@ -17,10 +17,16 @@ import {
   userLibraryAction,
 } from "../../redux/stores/user-library.store";
 import { shuffle } from "lodash";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { AppState } from "../../redux/app-store";
+import { RecommendedArtist } from "../../redux/stores/recommended-artists.store";
 
 export const LibraryController: React.FC = () => {
   const dispatch = useDispatch();
+
+  const { artists: artistSeed } = useSelector(
+    (state: AppState) => state.RecommendedArtistsStore
+  );
 
   const { data: playlist_response, error: playlist_error } = useQuery(
     ["current-user-playlists"],
@@ -62,12 +68,13 @@ export const LibraryController: React.FC = () => {
           artistName: album.artists[0].name,
           coverPhoto: album.images[0].url ?? "",
         });
+      });
 
-        const targetArtists = album.artists[0];
+      artistSeed.forEach((item: RecommendedArtist) => {
         artists.push({
-          id: targetArtists.id,
-          name: targetArtists.name,
-          images: targetArtists.images,
+          id: item.id,
+          name: item.name,
+          photoCover: item.photoCover ?? "",
         });
       });
     }
@@ -88,6 +95,12 @@ export const LibraryController: React.FC = () => {
       console.error(`Album Error : ${albums_error}`);
       console.error(`Playlist Error : ${playlist_error}`);
     }
-  }, [playlist_response, playlist_error, albums_reponse, albums_error]);
+  }, [
+    playlist_response,
+    playlist_error,
+    albums_reponse,
+    albums_error,
+    artistSeed,
+  ]);
   return null;
 };
