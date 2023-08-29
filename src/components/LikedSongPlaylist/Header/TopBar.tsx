@@ -4,11 +4,11 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { useThemeColors } from "../../theme/ThemeProvider";
-import { StyleSheet, View } from "react-native";
-import { STANDARD_TOPBAR_HEIGHT } from "../../theme/constants";
+import { useThemeColors } from "../../../theme/ThemeProvider";
+import { StyleSheet } from "react-native";
+import { STANDARD_TOPBAR_HEIGHT } from "../../../theme/constants";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { UIText } from "../common/UIText";
+import { UIText } from "../../common/UIText";
 
 const SHARE_COLOR = "#046951";
 
@@ -57,7 +57,7 @@ export const LikedSongsTopbar: React.FC<LikedSongsTopbarProps> = ({
       ]}
     >
       <Animated.View style={[titleAnimationStyles]}>
-        <UIText level="body" style={styles.title}>
+        <UIText level="subhead" style={styles.title}>
           Liked Songs
         </UIText>
       </Animated.View>

@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useThemeColors } from "../../theme/ThemeProvider";
 import { StyleSheet, View } from "react-native";
-import { uniqueId } from "lodash";
 import {
   LIKED_SONGS_VIEW_HEADER_HEIGHT,
   SCREEN_EDGE_SPACING,
@@ -12,17 +11,29 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
-import { LikeSongHeader } from "../../components/LikeSongHeader";
-import { LikedSongsTopbar } from "../../components/LikeSongHeader/TopBar";
+import { LikeSongHeader } from "../../components/LikedSongPlaylist/Header";
+import { LikedSongsTopbar } from "../../components/LikedSongPlaylist/Header/TopBar";
 import { UIPressable } from "../../components/common/UIPressable";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { HomeStackParamList } from "../../navigations/types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { borderRadius } from "../../theme/radius";
+import { SavedTrack } from "../../redux/stores/savedtracks.store";
+import { TrackListItem } from "../../components/LikedSongPlaylist/TrackListItem";
+import { useSelector } from "react-redux";
+import { AppState } from "../../redux/app-store";
+
+type RenderPropsType = {
+  item: SavedTrack;
+};
 
 export const LikedSongsView: React.FC = () => {
   const styles = useStyles();
+
+  const { tracks, total } = useSelector(
+    (state: AppState) => state.SavedTracksStore
+  );
 
   const translationY = useSharedValue(0);
 
@@ -48,6 +59,10 @@ export const LikedSongsView: React.FC = () => {
     };
   });
 
+  const renderItem = useCallback(({ item }: RenderPropsType) => {
+    return <TrackListItem {...item} />;
+  }, []);
+
   return (
     <View style={styles.container}>
       <Animated.FlatList
@@ -55,12 +70,8 @@ export const LikedSongsView: React.FC = () => {
         scrollEventThrottle={1}
         onScroll={scrollHandler}
         bounces={true}
-        data={Array(50)
-          .fill(0)
-          .map(() => {
-            id: uniqueId();
-          })}
-        renderItem={() => <View style={styles.cell}></View>}
+        data={tracks}
+        renderItem={renderItem}
         ItemSeparatorComponent={() => <View style={styles.seperator} />}
         contentContainerStyle={styles.flatlistStyle}
       />
@@ -81,7 +92,7 @@ export const LikedSongsView: React.FC = () => {
         </UIPressable>
       </Animated.View>
       <LikedSongsTopbar _scrollY={translationY} />
-      <LikeSongHeader _scrollY={translationY} />
+      <LikeSongHeader _scrollY={translationY} totalSongs={total} />
     </View>
   );
 };
@@ -101,7 +112,7 @@ const useStyles = () => {
       borderColor: scheme.secondaryBackground,
     },
     seperator: {
-      height: 10,
+      height: 18,
     },
     flatlistStyle: {
       paddingTop: LIKED_SONGS_VIEW_HEADER_HEIGHT + 30,

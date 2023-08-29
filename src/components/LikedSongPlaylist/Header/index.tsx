@@ -1,5 +1,5 @@
 import React from "react";
-import { useThemeColors } from "../../theme/ThemeProvider";
+import { useThemeColors } from "../../../theme/ThemeProvider";
 import { StyleSheet, View } from "react-native";
 import Animated, {
   FadeIn,
@@ -10,25 +10,23 @@ import Animated, {
 import {
   LIKED_SONGS_VIEW_HEADER_HEIGHT,
   SCREEN_EDGE_SPACING,
-} from "../../theme/constants";
+} from "../../../theme/constants";
 import { LinearGradient } from "expo-linear-gradient";
-import { UIText } from "../common/UIText";
-import { UIPressable } from "../common/UIPressable";
-import {
-  FontAwesome,
-  Ionicons,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
-import { borderRadius } from "../../theme/radius";
-import { hexToRGBA } from "../../utils/utils";
+import { UIText } from "../../common/UIText";
+import { UIPressable } from "../../common/UIPressable";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { borderRadius } from "../../../theme/radius";
+import { hexToRGBA } from "../../../utils/utils";
 
 const SHARE_COLOR = "#046951";
 
 type LikedSongHeaderProps = {
   _scrollY: SharedValue<number>;
+  totalSongs: number;
 };
 export const LikeSongHeader: React.FC<LikedSongHeaderProps> = ({
   _scrollY,
+  totalSongs,
 }) => {
   const styles = useStyles();
   const { scheme } = useThemeColors();
@@ -111,7 +109,7 @@ export const LikeSongHeader: React.FC<LikedSongHeaderProps> = ({
             Liked Songs
           </UIText>
           <UIText level="subhead" style={styles.metadata}>
-            1,256 songs
+            {totalSongs} songs
           </UIText>
         </Animated.View>
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { UIButton } from "../../components/common/UIButton";
-import { WhiteLogo } from "../../components/svgs/WhiteLogo";
+import { WhiteLogo } from "../../components/SVGS/WhiteLogo";
 import { UIText } from "../../components/common/UIText";
 import { SCREEN_EDGE_SPACING, SCREEN_HEIGHT } from "../../theme/constants";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
