@@ -42,7 +42,7 @@ export const LikedSongsView: React.FC = () => {
         translationY.value,
         [-LIKED_SONGS_VIEW_HEADER_HEIGHT, 0, 1],
         [
-          LIKED_SONGS_VIEW_HEADER_HEIGHT + Math.abs(translationY.value),
+          LIKED_SONGS_VIEW_HEADER_HEIGHT * 2,
           LIKED_SONGS_VIEW_HEADER_HEIGHT,
           LIKED_SONGS_VIEW_HEADER_HEIGHT,
         ]
@@ -52,23 +52,7 @@ export const LikedSongsView: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      {/* <LinearGradient
-        style={{
-          flex: 1,
-          position: "absolute",
-          height: SCREEN_HEIGHT,
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-        }}
-        locations={[0, 0.8]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 1 }}
-        colors={["green", scheme.systemBackground]}
-      /> */}
       <Animated.FlatList
-        // ListHeaderComponent={() => <ListHeader scrollY={translationY} />}
         scrollEventThrottle={1}
         onScroll={scrollHandler}
         bounces={true}
@@ -93,26 +77,27 @@ const useStyles = () => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      // backgroundColor: "blue",
     },
     cell: {
       // backgroundColor: scheme.secondaryBackground,
-      borderWidth: 1,
-      borderColor: "grey",
+      // borderWidth: 1,
+      // borderColor: "grey",
       height: 60,
       width: "100%",
       borderRadius: 10,
+      zIndex: 100,
     },
     seperator: {
       height: 10,
     },
     flatlistStyle: {
-      paddingTop: LIKED_SONGS_VIEW_HEADER_HEIGHT + 50,
+      paddingTop: LIKED_SONGS_VIEW_HEADER_HEIGHT,
       paddingBottom: 100,
       backgroundColor: scheme.systemBackground,
     },
     header: {
       position: "absolute",
+      flex: 1,
       top: 0,
       left: 0,
       bottom: 0,

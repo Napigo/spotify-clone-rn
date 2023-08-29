@@ -34,7 +34,7 @@ export const ListHeaderV2: React.FC = () => {
   );
 };
 
-const COLOR = "#3F60FA";
+const COLOR = "#046951";
 
 const useStyles = (scheme: UISchemeColor) => {
   return StyleSheet.create({

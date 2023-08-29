@@ -33,8 +33,6 @@ export const ListHeader: React.FC<ListHeaderProps> = ({ _scrollY }) => {
     };
   }, [_scrollY]);
 
-  console.log("list");
-
   return (
     <Animated.View style={[styles.container, animatedStyles]}>
       <LinearGradient
