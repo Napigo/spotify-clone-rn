@@ -1,4 +1,10 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { View, StyleSheet } from "react-native";
 import BottomSheet, { SCREEN_HEIGHT } from "@gorhom/bottom-sheet";
 import { UIButton } from "../../components/common/UIButton";
@@ -8,8 +14,11 @@ import {
 } from "../../theme/constants";
 import { BottomSheetContent } from "./Content";
 import { useThemeColors } from "../../theme/ThemeProvider";
+import { UIText } from "../../components/common/UIText";
 
-export const BottomSheetSandbox = () => {
+export const BottomSheetSandbox: React.FC<PropsWithChildren> = ({
+  children,
+}) => {
   const styles = useStyles();
 
   // ref
@@ -44,8 +53,8 @@ export const BottomSheetSandbox = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <UIButton
+    <>
+      {/* <UIButton
         variant="primary"
         size="md"
         text="Hello"
@@ -53,8 +62,7 @@ export const BottomSheetSandbox = () => {
           bottomSheetRef.current?.snapToIndex(2);
           setEnabledDrag(true);
         }}
-      />
-
+      /> */}
       <BottomSheet
         ref={bottomSheetRef}
         index={0}
@@ -71,9 +79,9 @@ export const BottomSheetSandbox = () => {
           duration: 250,
         }}
       >
-        <BottomSheetContent />
+        <BottomSheetContent setEnabledDrag={setEnabledDrag} />
       </BottomSheet>
-    </View>
+    </>
   );
 };
 
@@ -83,11 +91,15 @@ const useStyles = () => {
     container: {
       height: SCREEN_HEIGHT,
       backgroundColor: scheme.systemBackground,
-      paddingVertical: 300,
     },
     sheet: {
       borderRadius: 0,
       backgroundColor: scheme.secondaryBackground,
+    },
+    appContent: {
+      backgroundColor: "green",
+      height: SCREEN_HEIGHT,
+      width: "100%",
     },
   });
 };

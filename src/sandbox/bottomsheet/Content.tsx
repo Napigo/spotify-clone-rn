@@ -15,7 +15,13 @@ import { UIPressable } from "../../components/common/UIPressable";
 import { Ionicons } from "@expo/vector-icons";
 import { UIText } from "../../components/common/UIText";
 
-export const BottomSheetContent: React.FC = () => {
+type BottomSheetContentProps = {
+  setEnabledDrag: (enabled: boolean) => void;
+};
+
+export const BottomSheetContent: React.FC<BottomSheetContentProps> = ({
+  setEnabledDrag,
+}) => {
   const styles = useStyles();
 
   const { animatedIndex, animatedPosition, snapToIndex } = useBottomSheet();
@@ -59,7 +65,8 @@ export const BottomSheetContent: React.FC = () => {
       <Animated.View style={[styles.bottomBar, bottomBarAnimated]}>
         <UIPressable
           onPress={() => {
-            console.log("TEST ");
+            snapToIndex(1);
+            setEnabledDrag(true);
           }}
         >
           <UIText>Hello</UIText>
