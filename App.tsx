@@ -6,9 +6,12 @@ import { AppNavigation } from "./src/navigations";
 import { AuthContainer } from "./src/containers/Auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as SplashScreen from "expo-splash-screen";
+import { GesturesContainer } from "./src/sandbox/gestures/Container";
+import "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // Keep the splash screen visible while we fetch resources
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
 
@@ -19,7 +22,10 @@ export default function App() {
       <QueryClientProvider client={queryClient}>
         <Provider store={AppStore}>
           <AuthContainer>
-            <AppNavigation />
+            <GestureHandlerRootView>
+              <GesturesContainer />
+            </GestureHandlerRootView>
+            {/* <AppNavigation /> */}
           </AuthContainer>
         </Provider>
       </QueryClientProvider>
