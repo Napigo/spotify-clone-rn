@@ -5,6 +5,8 @@ import { CoreNavigation } from "./CoreNavigation";
 import { AuthNavigation } from "./AuthNavigation";
 import { useAuth } from "../containers/Auth";
 import { AppContainer } from "../containers/App";
+import { View } from "react-native";
+import { SCREEN_HEIGHT } from "@gorhom/bottom-sheet";
 
 export const AppNavigation: React.FC = () => {
   const { scheme } = useThemeColors();
