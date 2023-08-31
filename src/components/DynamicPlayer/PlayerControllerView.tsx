@@ -77,7 +77,7 @@ const useStyles = () => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: "#3F60FA",
+      backgroundColor: scheme.systemBackground,
     },
     playContainer: {
       height: DYNAMIC_BOTTOM_PLAYER_HEIGHT,
