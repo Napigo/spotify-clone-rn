@@ -1,5 +1,6 @@
 import React, {
   PropsWithChildren,
+  ReactElement,
   createContext,
   useCallback,
   useContext,
@@ -41,7 +42,7 @@ export interface DynamicPlayerRootViewConfigProps extends PropsWithChildren {
   detached?: boolean;
   animateOnMount?: boolean;
   animationConfigs?: WithSpringConfig | WithTimingConfig;
-  content: React.ReactElement;
+  content: ReactElement;
 }
 
 export const DynamicPlayerRootView: React.FC<

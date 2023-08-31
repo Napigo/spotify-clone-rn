@@ -1,10 +1,10 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useThemeColors } from "../../theme/ThemeProvider";
 import {
-  BOTTOM_TABBAR_HEIGHT,
   DYNAMIC_BOTTOM_PLAYER_HEIGHT,
   FULL_BOTTOM_BAR_HEIGHT,
+  SCREEN_EDGE_SPACING,
   SCREEN_HEIGHT,
 } from "../../theme/constants";
 import { UIPressable } from "../common/UIPressable";
@@ -16,14 +16,19 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 
+type PlayerControllerViewProps = {
+  tabbar: React.ReactElement;
+};
 /**
  *
  * @returns
  */
-export const PlayerControllerView: React.FC = () => {
+export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
+  tabbar,
+}) => {
   const styles = useStyles();
 
-  const { close: closePlayer } = useDynamicPlayer();
+  const { close: closePlayer, openFull } = useDynamicPlayer();
 
   const { animatedIndex, animatedPosition } = useBottomSheet();
 
@@ -48,17 +53,21 @@ export const PlayerControllerView: React.FC = () => {
 
   return (
     <>
-      <UIPressable
-        onPress={() => {
-          closePlayer();
-        }}
-      >
-        <Ionicons name="close" size={23} color="white" />
-      </UIPressable>
+      <View style={styles.container}>
+        <UIPressable style={styles.playContainer} onPress={openFull}>
+          <UIPressable
+            onPress={() => {
+              closePlayer();
+            }}
+          >
+            <Ionicons name="close" size={23} color="white" />
+          </UIPressable>
+        </UIPressable>
+      </View>
 
-      <Animated.View
-        style={[styles.bottomBar, bottomBarAnimated]}
-      ></Animated.View>
+      <Animated.View style={[styles.bottomBarContainer, bottomBarAnimated]}>
+        {tabbar}
+      </Animated.View>
     </>
   );
 };
@@ -68,18 +77,24 @@ const useStyles = () => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      flexDirection: "row",
-      alignItems: "flex-start",
-      paddingTop: BOTTOM_TABBAR_HEIGHT * 0.45,
-      justifyContent: "flex-end",
-      paddingRight: 10,
+      backgroundColor: "#3F60FA",
     },
-    bottomBar: {
+    playContainer: {
+      height: DYNAMIC_BOTTOM_PLAYER_HEIGHT,
+      width: "100%",
+      flexDirection: "row",
+      paddingHorizontal: SCREEN_EDGE_SPACING,
+      alignItems: "center",
+      justifyContent: "flex-end",
+    },
+    bottomBarContainer: {
       position: "absolute",
       top: DYNAMIC_BOTTOM_PLAYER_HEIGHT,
       height: FULL_BOTTOM_BAR_HEIGHT,
       backgroundColor: "hotpink",
       width: "100%",
+      borderTopWidth: 0.5,
+      borderTopColor: scheme.secondaryBackground,
     },
   });
 };

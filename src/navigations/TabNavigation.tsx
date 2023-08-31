@@ -2,10 +2,6 @@ import React, { useCallback } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import * as Haptics from "expo-haptics";
 import { TabStackParamList } from "./types";
-import { TabBarIcon } from "../components/Navigations/TabBarIcon";
-import { UIText } from "../components/common/UIText";
-import { useThemeColors } from "../theme/ThemeProvider";
-import { StyleSheet } from "react-native";
 import { SearchView } from "../views/Search";
 import { LibraryNavigation } from "./LibraryNavigation";
 import { HomeNavigation } from "./HomeNavigation";
@@ -13,8 +9,6 @@ import { HomeNavigation } from "./HomeNavigation";
 const Tab = createBottomTabNavigator<TabStackParamList>();
 
 export const TabNavigation: React.FC = () => {
-  const styles = useStyles();
-
   const runHaptics = useCallback(() => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   }, []);
@@ -22,27 +16,9 @@ export const TabNavigation: React.FC = () => {
   return (
     <Tab.Navigator
       initialRouteName="Home"
-      screenOptions={({ route }) => ({
+      tabBar={() => <></>}
+      screenOptions={({}) => ({
         headerShown: false,
-        tabBarIcon: ({ focused }) => (
-          <TabBarIcon focused={focused} name={route.name} />
-        ),
-        tabBarLabel: ({ focused }) => (
-          <UIText style={focused ? styles.tabLabel_active : styles.tabLabel}>
-            {route.name}
-          </UIText>
-        ),
-
-        tabBarStyle: {
-          position: "absolute",
-          borderWidth: 0,
-          borderTopWidth: 0,
-          borderTopColor: "transparent",
-          elevation: 0,
-          shadowColor: "#5bc4ff",
-          shadowOpacity: 0,
-          shadowRadius: 0,
-        },
       })}
     >
       <Tab.Screen
@@ -73,19 +49,4 @@ export const TabNavigation: React.FC = () => {
       />
     </Tab.Navigator>
   );
-};
-
-const useStyles = () => {
-  const { scheme } = useThemeColors();
-
-  return StyleSheet.create({
-    tabLabel: {
-      fontSize: 11,
-      color: scheme.systemGray,
-    },
-    tabLabel_active: {
-      fontSize: 11,
-      color: scheme.systemTint,
-    },
-  });
 };

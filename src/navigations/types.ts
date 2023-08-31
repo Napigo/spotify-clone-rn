@@ -30,5 +30,10 @@ export type LibraryStackParamList = {
  *
  */
 export type SubNavigator<T extends ParamListBase> = {
-  [K in keyof T]: { screen: K; params?: T[K]; initial?: boolean };
+  [K in keyof T]: {
+    screen?: K;
+    params?: T[K];
+    initial?: boolean;
+    merge?: boolean;
+  };
 }[keyof T];
