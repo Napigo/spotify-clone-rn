@@ -10,11 +10,14 @@ import {
   TOP_BAR_ICON_SIZE,
 } from "../../../theme/constants";
 import { useAuth } from "../../../containers/Auth";
+import { useDynamicPlayer } from "../../DynamicPlayer";
 
 export const HomeHeader: React.FC = () => {
   const styles = useStyles();
 
   const { logout } = useAuth();
+
+  const { minimize, openFull } = useDynamicPlayer();
 
   const greeting = useMemo(() => {
     const currentTime = new Date();
@@ -42,7 +45,7 @@ export const HomeHeader: React.FC = () => {
             color={styles.icon.color}
           />
         </UIPressable>
-        <UIPressable>
+        <UIPressable onPress={minimize}>
           <Ionicons
             name="timer-outline"
             size={TOP_BAR_ICON_SIZE}
