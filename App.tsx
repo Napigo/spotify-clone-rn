@@ -7,14 +7,9 @@ import { AuthContainer } from "./src/containers/Auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as SplashScreen from "expo-splash-screen";
 import "react-native-gesture-handler";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { BottomSheetSandbox } from "./src/sandbox/bottomsheet";
-import { View } from "react-native";
-import { BottomSheetModalProvider } from "./src/sandbox/bottomsheetmodal";
-import { SCREEN_HEIGHT } from "@gorhom/bottom-sheet";
 
 // Keep the splash screen visible while we fetch resources
-// SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
 

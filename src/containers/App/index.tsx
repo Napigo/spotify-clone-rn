@@ -32,7 +32,6 @@ import { SearchViewController } from "../../views/Search/SearchViewController";
 import { SavedTracksController } from "../../views/Library/SavedTracksController";
 import { UserPlaylistController } from "../../views/Library/UserPlaylistsController";
 import { LibraryController } from "../../views/Library/LibraryController";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 /**
  * This component initialize all data required

@@ -5,16 +5,14 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import BottomSheet, { SCREEN_HEIGHT } from "@gorhom/bottom-sheet";
-import { UIButton } from "../../components/common/UIButton";
 import {
   DYNAMIC_BOTTOM_PLAYER_HEIGHT,
   FULL_BOTTOM_BAR_HEIGHT,
 } from "../../theme/constants";
 import { BottomSheetContent } from "./Content";
 import { useThemeColors } from "../../theme/ThemeProvider";
-import { UIText } from "../../components/common/UIText";
 
 export const BottomSheetSandbox: React.FC<PropsWithChildren> = ({
   children,

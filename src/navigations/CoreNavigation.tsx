@@ -1,8 +1,7 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { CoreStackParamList } from "./types";
 import { TabNavigation } from "./TabNavigation";
-import { BottomSheetModalProvider } from "../sandbox/bottomsheetmodal";
 import { BottomSheetSandbox } from "../sandbox/bottomsheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
