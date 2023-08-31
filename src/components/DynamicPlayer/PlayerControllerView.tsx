@@ -13,8 +13,10 @@ import { useDynamicPlayer } from ".";
 import { useBottomSheet } from "@gorhom/bottom-sheet";
 import Animated, {
   interpolate,
+  interpolateColor,
   useAnimatedStyle,
 } from "react-native-reanimated";
+import { darkenColor } from "../../utils/utils";
 
 type PlayerControllerViewProps = {
   tabbar: React.ReactElement;
@@ -27,6 +29,7 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
   tabbar,
 }) => {
   const styles = useStyles();
+  const { scheme } = useThemeColors();
 
   const { close: closePlayer, openFull } = useDynamicPlayer();
 
@@ -51,10 +54,22 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
     };
   });
 
+  const c = darkenColor("#BA5D08", 0.5);
+
+  const backgroundAnimated = useAnimatedStyle(() => {
+    return {
+      backgroundColor: interpolateColor(
+        animatedIndex.value,
+        [0, 1, 2],
+        [scheme.systemBackground, scheme.systemBackground, c]
+      ),
+    };
+  });
+
   return (
     <>
-      <View style={styles.container}>
-        <UIPressable style={styles.playContainer} onPress={openFull}>
+      <Animated.View style={[styles.playerContainer, backgroundAnimated]}>
+        <UIPressable style={styles.minimizeContainer} onPress={openFull}>
           <UIPressable
             onPress={() => {
               closePlayer();
@@ -63,7 +78,7 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
             <Ionicons name="close" size={23} color="white" />
           </UIPressable>
         </UIPressable>
-      </View>
+      </Animated.View>
 
       <Animated.View style={[styles.bottomBarContainer, bottomBarAnimated]}>
         {tabbar}
@@ -75,11 +90,11 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
 const useStyles = () => {
   const { scheme } = useThemeColors();
   return StyleSheet.create({
-    container: {
+    playerContainer: {
       flex: 1,
       backgroundColor: scheme.systemBackground,
     },
-    playContainer: {
+    minimizeContainer: {
       height: DYNAMIC_BOTTOM_PLAYER_HEIGHT,
       width: "100%",
       flexDirection: "row",

@@ -40,3 +40,27 @@ export function hexToRGBA(hex: string, alpha = 1) {
 
   return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
 }
+
+export function darkenColor(hex: string, factor: number) {
+  // Remove the "#" symbol if present
+  hex = hex.replace("#", "");
+
+  // Convert the hex string to RGB values
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+
+  // Calculate the darker RGB values
+  const newR = Math.max(0, Math.floor(r - r * factor));
+  const newG = Math.max(0, Math.floor(g - g * factor));
+  const newB = Math.max(0, Math.floor(b - b * factor));
+
+  // Convert the new RGB values to a hex color string
+  const newHex =
+    "#" +
+    newR.toString(16).padStart(2, "0") +
+    newG.toString(16).padStart(2, "0") +
+    newB.toString(16).padStart(2, "0");
+
+  return newHex;
+}
