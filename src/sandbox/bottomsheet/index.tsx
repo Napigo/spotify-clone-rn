@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import BottomSheet, { SCREEN_HEIGHT } from "@gorhom/bottom-sheet";
 import {
   DYNAMIC_BOTTOM_PLAYER_HEIGHT,
@@ -52,6 +52,7 @@ export const BottomSheetSandbox: React.FC<PropsWithChildren> = ({
 
   return (
     <>
+      {children}
       {/* <UIButton
         variant="primary"
         size="md"
@@ -101,3 +102,9 @@ const useStyles = () => {
     },
   });
 };
+
+const Testing: React.FC<{ name: string }> = ({ name }) => {
+  return <View></View>;
+};
+
+const Comp = React.memo(Testing);

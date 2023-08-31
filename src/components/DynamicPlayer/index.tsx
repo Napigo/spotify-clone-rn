@@ -1,207 +1,134 @@
 import React, {
   PropsWithChildren,
+  createContext,
   useCallback,
-  useEffect,
+  useContext,
   useMemo,
   useRef,
   useState,
 } from "react";
-import {
-  BottomSheetBackdrop,
-  BottomSheetBackdropProps,
-  BottomSheetModal,
-  BottomSheetModalProvider,
-} from "@gorhom/bottom-sheet";
-import { uniqueId } from "lodash";
-import { Keyboard, StyleSheet, TextStyle, View } from "react-native";
-import { UIPressable } from "../common/UIPressable";
-import { UIText } from "../common/UIText";
+import { StyleSheet, ViewStyle } from "react-native";
+import { WithSpringConfig, WithTimingConfig } from "react-native-reanimated";
 import { useThemeColors } from "../../theme/ThemeProvider";
+import {
+  DYNAMIC_BOTTOM_PLAYER_HEIGHT,
+  FULL_BOTTOM_BAR_HEIGHT,
+  SCREEN_HEIGHT,
+} from "../../theme/constants";
+import BottomSheet from "@gorhom/bottom-sheet";
 
-const DEFAULT_FIRST_HEIGHT = "20%";
-
-type SheetConfig = {
-  showHandleBar: boolean;
-  menuHeight: string;
-  showDivider: boolean;
-  dismissKeyboardOnOpen?: boolean;
-  destructiveIndex: number;
-  renderHeader?: () => React.ReactElement;
-  optionContentAlignCentered?: boolean;
-  options?: Option[];
-  content?: React.ReactElement;
+type DynamicPlayerContextProps = {
+  minimize: () => void;
+  close: () => void;
+  openFull: () => void;
+  setDragEnable: (enabled: boolean) => void;
 };
 
-const DefaultConfig: SheetConfig = {
-  showHandleBar: true,
-  menuHeight: "50%",
-  showDivider: true,
-  destructiveIndex: -1,
+const DynamicPlayerContext = createContext<DynamicPlayerContextProps>({
+  minimize() {},
+  close() {},
+  openFull() {},
+  setDragEnable(_) {},
+});
+
+export const useDynamicPlayer = () => {
+  return useContext(DynamicPlayerContext);
 };
 
-export type Option = {
-  label?: string;
-  icon?: React.ReactElement;
-  renderComponent?: () => React.ReactElement;
-  onPress?: () => void;
-};
-
-interface UIBottomSheetContextProps {
-  openSheet: (config: SheetConfig) => void;
-  dismissSheet: () => void;
+export interface DynamicPlayerRootViewConfigProps extends PropsWithChildren {
+  defaultIndex?: number;
+  sheetStyle?: ViewStyle;
+  detached?: boolean;
+  animateOnMount?: boolean;
+  animationConfigs?: WithSpringConfig | WithTimingConfig;
+  content: React.ReactElement;
 }
-const UIBottomSheetContext = React.createContext<UIBottomSheetContextProps>(
-  {} as UIBottomSheetContextProps
-);
-export const useBottomSheet = () => {
-  return React.useContext(UIBottomSheetContext);
-};
 
-export const UIBottomSheetProvider: React.FC<PropsWithChildren> = ({
+export const DynamicPlayerRootView: React.FC<
+  DynamicPlayerRootViewConfigProps
+> = ({
   children,
+  defaultIndex = 0,
+  sheetStyle,
+  detached = true,
+  animateOnMount = false,
+  animationConfigs = {
+    duration: 250,
+  },
+  content,
 }) => {
-  const [config, setConfig] = useState<SheetConfig>(DefaultConfig);
-
   const styles = useStyles();
+  // ref
+  const bottomSheetRef = useRef<BottomSheet>(null);
 
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const [enabledDrag, setDragEnable] = useState<boolean>(false);
 
   const snapPoints = useMemo(
-    () => [DEFAULT_FIRST_HEIGHT, config.menuHeight],
-    [config]
+    () => [
+      FULL_BOTTOM_BAR_HEIGHT,
+      FULL_BOTTOM_BAR_HEIGHT + DYNAMIC_BOTTOM_PLAYER_HEIGHT,
+      SCREEN_HEIGHT,
+    ],
+    []
   );
 
   const handleSheetChanges = useCallback((index: number) => {
     if (index === 0) {
-      bottomSheetModalRef.current?.close();
+      setDragEnable(false);
     }
   }, []);
 
-  /**
-   *
-   */
-  const openSheet = useCallback((config: SheetConfig) => {
-    setConfig(config);
-    bottomSheetModalRef.current?.present();
-    if (config.dismissKeyboardOnOpen) {
-      Keyboard.dismiss();
+  const handleAnimate = (fromIndex: number, toIndex: number) => {
+    if (toIndex === 0 && fromIndex === 2) {
+      bottomSheetRef.current?.snapToIndex(1);
     }
-  }, []);
-
-  const dismissSheet = useCallback(() => {
-    bottomSheetModalRef.current?.close();
-  }, []);
-
-  const optionItems = useMemo(() => {
-    return config.options ? config.options : [];
-  }, [config]);
-
-  const isNotLastOptionIndex = useCallback(
-    (index: number) => {
-      return config.showDivider && index < optionItems.length - 1;
-    },
-    [config.showDivider, optionItems]
-  );
-
-  useEffect(() => {
-    if (config.options && config.content) {
-      throw new Error(
-        "You cant have both options menu sheet and custom content sheet at the same time"
-      );
+    if (fromIndex === 0) {
+      bottomSheetRef.current?.snapToIndex(0);
     }
-  }, [config]);
+  };
 
-  const value = useMemo(() => {
-    return {
-      openSheet,
-      dismissSheet,
-    };
+  const minimize = useCallback(() => {
+    bottomSheetRef.current?.snapToIndex(1);
+    setDragEnable(true);
   }, []);
 
-  const renderBackdrop = useCallback(
-    (props: BottomSheetBackdropProps) => (
-      <BottomSheetBackdrop
-        {...props}
-        style={[props.style]}
-        disappearsOnIndex={-1}
-        appearsOnIndex={0}
-        opacity={0.5}
-        pressBehavior="close"
-      />
-    ),
-    []
-  );
+  const openFull = useCallback(() => {
+    bottomSheetRef.current?.snapToIndex(snapPoints.length - 1);
+    setDragEnable(true);
+  }, []);
+
+  const close = useCallback(() => {
+    bottomSheetRef.current?.snapToIndex(0);
+    setDragEnable(false);
+  }, []);
 
   return (
-    <UIBottomSheetContext.Provider value={value}>
+    <DynamicPlayerContext.Provider
+      value={{
+        minimize,
+        openFull,
+        close,
+        setDragEnable,
+      }}
+    >
       {children}
-
-      <BottomSheetModalProvider>
-        <BottomSheetModal
-          backdropComponent={renderBackdrop}
-          onDismiss={dismissSheet}
-          stackBehavior="replace"
-          backgroundStyle={styles.modal}
-          handleIndicatorStyle={{
-            display: config.showHandleBar ? "flex" : "none",
-          }}
-          ref={bottomSheetModalRef}
-          index={1}
-          enableOverDrag={false}
-          enableDismissOnClose={true}
-          snapPoints={snapPoints}
-          onChange={handleSheetChanges}
-          enableContentPanningGesture={true}
-        >
-          <View style={styles.contentContainer}>
-            {config.renderHeader && <>{config?.renderHeader()}</>}
-            {config.content && <>{config.content}</>}
-            {optionItems.length > 0 && (
-              <>
-                {optionItems.map((item: Option, index: number) => {
-                  if (item.renderComponent) {
-                    return (
-                      <View style={[styles.defaultItemRow]} key={uniqueId()}>
-                        {item.renderComponent()}
-                        {isNotLastOptionIndex(index) && (
-                          <View style={styles.divider} />
-                        )}
-                      </View>
-                    );
-                  }
-
-                  return (
-                    <UIPressable
-                      key={uniqueId()}
-                      style={[
-                        styles.item,
-                        config.optionContentAlignCentered &&
-                          styles.alignCentered,
-                        isNotLastOptionIndex(index)
-                          ? styles.itemDivider
-                          : undefined,
-                      ]}
-                      onPress={item.onPress}
-                    >
-                      <UIText
-                        style={[
-                          styles.itemText,
-                          index === config.destructiveIndex
-                            ? styles.destructive
-                            : undefined,
-                        ]}
-                      >
-                        {item.label ?? "No Label"}
-                      </UIText>
-                    </UIPressable>
-                  );
-                })}
-              </>
-            )}
-          </View>
-        </BottomSheetModal>
-      </BottomSheetModalProvider>
-    </UIBottomSheetContext.Provider>
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={defaultIndex}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+        onAnimate={handleAnimate}
+        style={{ flex: 1 }}
+        handleComponent={null}
+        backgroundStyle={sheetStyle ?? styles.defaultSheet}
+        enableContentPanningGesture={enabledDrag}
+        detached={detached}
+        animateOnMount={animateOnMount}
+        animationConfigs={animationConfigs}
+      >
+        {content}
+      </BottomSheet>
+    </DynamicPlayerContext.Provider>
   );
 };
 
@@ -209,57 +136,13 @@ const useStyles = () => {
   const { scheme } = useThemeColors();
 
   return StyleSheet.create({
-    sheetPortalContainer: {},
-    headerContainer: {
-      width: "100%",
+    container: {
+      height: SCREEN_HEIGHT,
+      backgroundColor: "transparent",
     },
-    modal: {
+    defaultSheet: {
       borderRadius: 0,
       backgroundColor: scheme.secondaryBackground,
-      shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 6,
-      },
-      shadowOpacity: 0.59,
-      shadowRadius: 8.3,
-
-      elevation: 13,
-    },
-    contentContainer: {
-      flex: 1,
-      flexDirection: "column",
-      alignItems: "center",
-    },
-    cancelButton: {
-      borderWidth: 0,
-      width: "90%",
-    },
-    item: {
-      flexDirection: "row",
-      alignItems: "center",
-      height: 50,
-      width: "100%",
-    },
-    alignCentered: {
-      justifyContent: "center",
-    },
-    itemDivider: {
-      borderBottomWidth: 1,
-    },
-    itemText: {},
-    iconBox: {
-      flexDirection: "row",
-      justifyContent: "center",
-    },
-    icon: {},
-    defaultItemRow: {
-      width: "100%",
-    },
-    destructive: {},
-    divider: {
-      height: 1,
-      width: "100%",
     },
   });
 };

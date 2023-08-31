@@ -1,30 +1,31 @@
 import React from "react";
-// import { useThemeColors } from "../../theme/ThemeProvider";
 import { StyleSheet } from "react-native";
+import { useThemeColors } from "../../theme/ThemeProvider";
 import {
   BOTTOM_TABBAR_HEIGHT,
   DYNAMIC_BOTTOM_PLAYER_HEIGHT,
   FULL_BOTTOM_BAR_HEIGHT,
+  SCREEN_HEIGHT,
 } from "../../theme/constants";
+import { UIPressable } from "../common/UIPressable";
+import { Ionicons } from "@expo/vector-icons";
+import { useDynamicPlayer } from ".";
+import { useBottomSheet } from "@gorhom/bottom-sheet";
 import Animated, {
   interpolate,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { SCREEN_HEIGHT, useBottomSheet } from "@gorhom/bottom-sheet";
-import { UIPressable } from "../../components/common/UIPressable";
-import { Ionicons } from "@expo/vector-icons";
-import { UIText } from "../../components/common/UIText";
 
-type BottomSheetContentProps = {
-  setEnabledDrag: (enabled: boolean) => void;
-};
-
-export const BottomSheetContent: React.FC<BottomSheetContentProps> = ({
-  setEnabledDrag,
-}) => {
+/**
+ *
+ * @returns
+ */
+export const PlayerControllerView: React.FC = () => {
   const styles = useStyles();
 
-  const { animatedIndex, animatedPosition, snapToIndex } = useBottomSheet();
+  const { close: closePlayer } = useDynamicPlayer();
+
+  const { animatedIndex, animatedPosition } = useBottomSheet();
 
   const bottomBarAnimated = useAnimatedStyle(() => {
     const index0Height = SCREEN_HEIGHT - FULL_BOTTOM_BAR_HEIGHT;
@@ -48,36 +49,22 @@ export const BottomSheetContent: React.FC<BottomSheetContentProps> = ({
   return (
     <>
       <UIPressable
-        style={styles.container}
-        onPress={(e) => {
-          snapToIndex(2);
+        onPress={() => {
+          closePlayer();
         }}
       >
-        <UIPressable
-          onPress={() => {
-            snapToIndex(0);
-          }}
-        >
-          <Ionicons name="close" size={23} color="white" />
-        </UIPressable>
+        <Ionicons name="close" size={23} color="white" />
       </UIPressable>
-      <Animated.View style={[styles.bottomBar, bottomBarAnimated]}>
-        <UIPressable
-          onPress={() => {
-            snapToIndex(1);
-            setEnabledDrag(true);
-          }}
-        >
-          <UIText>Hello</UIText>
-        </UIPressable>
-      </Animated.View>
+
+      <Animated.View
+        style={[styles.bottomBar, bottomBarAnimated]}
+      ></Animated.View>
     </>
   );
 };
 
 const useStyles = () => {
-  // const { scheme } = useThemeColors();
-
+  const { scheme } = useThemeColors();
   return StyleSheet.create({
     container: {
       flex: 1,
