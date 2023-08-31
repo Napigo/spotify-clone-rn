@@ -8,7 +8,7 @@ import {
   SCREEN_HEIGHT,
 } from "../../theme/constants";
 import { UIPressable } from "../common/UIPressable";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useDynamicPlayer } from ".";
 import { useBottomSheet } from "@gorhom/bottom-sheet";
 import Animated, {
@@ -17,6 +17,9 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 import { darkenColor } from "../../utils/utils";
+import { useAssets } from "expo-asset";
+import { Image } from "expo-image";
+import { UIText } from "../common/UIText";
 
 type PlayerControllerViewProps = {
   tabbar: React.ReactElement;
@@ -66,17 +69,46 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
     };
   });
 
+  const [assets] = useAssets([
+    require("../../../assets/images/playlist-cover.png"),
+  ]);
+
   return (
     <>
       <Animated.View style={[styles.playerContainer, backgroundAnimated]}>
         <UIPressable style={styles.minimizeContainer} onPress={openFull}>
-          <UIPressable
-            onPress={() => {
-              closePlayer();
-            }}
-          >
-            <Ionicons name="close" size={23} color="white" />
-          </UIPressable>
+          <View style={styles.songDataBox}>
+            {assets && (
+              <View style={styles.songImage}>
+                <Image
+                  source={assets[0].uri}
+                  contentFit="cover"
+                  style={{ flex: 1 }}
+                />
+              </View>
+            )}
+            <View style={styles.textualBox}>
+              <UIText level="subhead" style={styles.songTitle}>
+                Song Title here
+              </UIText>
+              <UIText level="caption" style={styles.artistName}>
+                Artist Name
+              </UIText>
+            </View>
+          </View>
+          <View style={styles.controlBox}>
+            <UIPressable style={styles.controlButton} onPress={closePlayer}>
+              <MaterialIcons
+                name="speaker-group"
+                size={23}
+                color={scheme.systemTint}
+              />
+            </UIPressable>
+            <UIPressable style={styles.controlButton}>
+              {/* <Ionicons name="pause" size={23} color={scheme.primary} /> */}
+              <Ionicons name="play" size={23} color={scheme.systemTint} />
+            </UIPressable>
+          </View>
         </UIPressable>
       </Animated.View>
 
@@ -98,9 +130,9 @@ const useStyles = () => {
       height: DYNAMIC_BOTTOM_PLAYER_HEIGHT,
       width: "100%",
       flexDirection: "row",
-      paddingHorizontal: SCREEN_EDGE_SPACING,
+      // paddingHorizontal: SCREEN_EDGE_SPACING,
       alignItems: "center",
-      justifyContent: "flex-end",
+      justifyContent: "space-between",
     },
     bottomBarContainer: {
       position: "absolute",
@@ -110,6 +142,43 @@ const useStyles = () => {
       width: "100%",
       borderTopWidth: 0.5,
       borderTopColor: scheme.secondaryBackground,
+    },
+    songImage: {
+      height: DYNAMIC_BOTTOM_PLAYER_HEIGHT - 20,
+      aspectRatio: 1,
+    },
+    songDataBox: {
+      height: "100%",
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 10,
+      paddingHorizontal: SCREEN_EDGE_SPACING,
+    },
+    controlBox: {
+      height: "100%",
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 0,
+    },
+    textualBox: {
+      flexDirection: "column",
+      justifyContent: "center",
+      gap: 1,
+      height: "100%",
+    },
+    songTitle: {
+      fontWeight: "700",
+    },
+    artistName: {
+      fontWeight: "500",
+      color: scheme.systemGray2,
+    },
+    controlButton: {
+      // backgroundColor: "blue",
+      height: "100%",
+      aspectRatio: 0.8,
+      alignItems: "center",
+      justifyContent: "center",
     },
   });
 };
