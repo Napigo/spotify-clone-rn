@@ -7,6 +7,7 @@ export interface SavedTrack {
   images: IImage[];
   artistName: string;
   albumName: string;
+  uri: string;
 }
 interface SavedTracksState {
   isReady: boolean;

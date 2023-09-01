@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import { UIPressable } from "../../common/UIPressable";
 import { SavedTrack } from "../../../redux/stores/savedtracks.store";
@@ -8,17 +8,48 @@ import { Image } from "expo-image";
 import { UIText } from "../../common/UIText";
 import { Ionicons } from "@expo/vector-icons";
 import { truncate } from "lodash";
+import { useDispatch, useSelector } from "react-redux";
+import { playerAction } from "../../../redux/stores/player.store";
+import { useDynamicPlayer } from "../../DynamicPlayer";
+import { AppState } from "../../../redux/app-store";
 
 const Component: React.FC<SavedTrack> = (props) => {
   const styles = useStyles();
+
+  const source = useSelector((state: AppState) => state.PlayerStore.source);
+  const dispatch = useDispatch();
+  const { minimize } = useDynamicPlayer();
+
+  const onTrackPress = useCallback(() => {
+    dispatch(
+      playerAction.loadSource({
+        id: props.id,
+        title: props.name,
+        label: props.artistName,
+        uri: props.uri,
+        coverPhoto: props.images[0].url ?? "",
+      })
+    );
+    dispatch(playerAction.setActive(true));
+    dispatch(playerAction.isPlaying(true)); // auto play when pressed
+    minimize();
+  }, [props, dispatch]);
+
+  const isTrackPlaying = useMemo(() => {
+    return source && source.id === props.id;
+  }, [source, props.id]);
+
   return (
-    <UIPressable style={styles.container}>
+    <UIPressable style={styles.container} onPress={onTrackPress}>
       <View style={styles.rightContent}>
         <View style={styles.imageContainer}>
           <Image source={props.images[0].url} style={{ flex: 1 }} />
         </View>
         <View style={styles.textContainer}>
-          <UIText level="body" style={styles.name}>
+          <UIText
+            level="body"
+            style={[styles.name, isTrackPlaying && styles.nameActive]}
+          >
             {props.name}
           </UIText>
           <UIText level="caption" style={styles.metadata}>
@@ -70,6 +101,9 @@ const useStyles = () => {
     name: {
       fontWeight: "600",
       fontSize: 16,
+    },
+    nameActive: {
+      color: scheme.primary,
     },
     metadata: {
       color: scheme.systemGray2,

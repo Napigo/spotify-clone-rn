@@ -24,6 +24,7 @@ export const SavedTracksController: React.FC = () => {
         albumName: item.track.album.name,
         artistName: item.track.artists[0].name,
         images: item.track.album.images,
+        uri: item.track.uri,
       }));
       dispatch(
         savedTracksAction.load({

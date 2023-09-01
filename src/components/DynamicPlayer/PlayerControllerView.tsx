@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
 import { useThemeColors } from "../../theme/ThemeProvider";
 import {
@@ -20,6 +20,9 @@ import { darkenColor } from "../../utils/utils";
 import { useAssets } from "expo-asset";
 import { Image } from "expo-image";
 import { UIText } from "../common/UIText";
+import { useDispatch, useSelector } from "react-redux";
+import { AppState } from "../../redux/app-store";
+import { playerAction } from "../../redux/stores/player.store";
 
 type PlayerControllerViewProps = {
   tabbar: React.ReactElement;
@@ -34,9 +37,17 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
   const styles = useStyles();
   const { scheme } = useThemeColors();
 
+  const {
+    source,
+    active,
+    isPlaying: trackPlaying,
+  } = useSelector((state: AppState) => state.PlayerStore);
+
   const { close: closePlayer, openFull } = useDynamicPlayer();
 
   const { animatedIndex, animatedPosition } = useBottomSheet();
+
+  const dispatch = useDispatch();
 
   const bottomBarAnimated = useAnimatedStyle(() => {
     const index0Height = SCREEN_HEIGHT - FULL_BOTTOM_BAR_HEIGHT;
@@ -73,6 +84,10 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
     require("../../../assets/images/playlist-cover.png"),
   ]);
 
+  const togglePlayback = useCallback(() => {
+    dispatch(playerAction.isPlaying(!trackPlaying));
+  }, [trackPlaying]);
+
   return (
     <>
       <Animated.View style={[styles.playerContainer, backgroundAnimated]}>
@@ -81,7 +96,7 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
             {assets && (
               <View style={styles.songImage}>
                 <Image
-                  source={assets[0].uri}
+                  source={source?.coverPhoto ?? assets[0].uri}
                   contentFit="cover"
                   style={{ flex: 1 }}
                 />
@@ -89,10 +104,10 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
             )}
             <View style={styles.textualBox}>
               <UIText level="subhead" style={styles.songTitle}>
-                Song Title here
+                {source?.title}
               </UIText>
               <UIText level="caption" style={styles.artistName}>
-                Artist Name
+                {source?.label}
               </UIText>
             </View>
           </View>
@@ -104,9 +119,12 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
                 color={scheme.systemTint}
               />
             </UIPressable>
-            <UIPressable style={styles.controlButton}>
-              {/* <Ionicons name="pause" size={23} color={scheme.primary} /> */}
-              <Ionicons name="play" size={23} color={scheme.systemTint} />
+            <UIPressable style={styles.controlButton} onPress={togglePlayback}>
+              {trackPlaying ? (
+                <Ionicons name="pause" size={23} color={scheme.primary} />
+              ) : (
+                <Ionicons name="play" size={23} color={scheme.systemTint} />
+              )}
             </UIPressable>
           </View>
         </UIPressable>

@@ -17,6 +17,8 @@ import {
   SCREEN_HEIGHT,
 } from "../../theme/constants";
 import BottomSheet from "@gorhom/bottom-sheet";
+import { useDispatch } from "react-redux";
+import { playerAction } from "../../redux/stores/player.store";
 
 type DynamicPlayerContextProps = {
   minimize: () => void;
@@ -63,6 +65,7 @@ export const DynamicPlayerRootView: React.FC<
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const [enabledDrag, setDragEnable] = useState<boolean>(false);
+  const dispatch = useDispatch();
 
   const snapPoints = useMemo(
     () => [
@@ -75,7 +78,9 @@ export const DynamicPlayerRootView: React.FC<
 
   const handleSheetChanges = useCallback((index: number) => {
     if (index === 0) {
+      // also clear the player state
       setDragEnable(false);
+      dispatch(playerAction.clearPlayer());
     }
   }, []);
 
