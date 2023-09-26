@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import { UIPressable } from "../../common/UIPressable";
 import { SavedTrack } from "../../../redux/stores/savedtracks.store";
@@ -8,17 +8,84 @@ import { Image } from "expo-image";
 import { UIText } from "../../common/UIText";
 import { Ionicons } from "@expo/vector-icons";
 import { truncate } from "lodash";
+import { useDispatch, useSelector } from "react-redux";
+import { playerAction } from "../../../redux/stores/player.store";
+import { useDynamicPlayer } from "../../DynamicPlayer";
+import { AppState } from "../../../redux/app-store";
+import LottieView from "lottie-react-native";
+import Animated, {
+  FadeIn,
+  FadeOut,
+  useAnimatedStyle,
+  useDerivedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 const Component: React.FC<SavedTrack> = (props) => {
   const styles = useStyles();
+
+  const { source, isPlaying } = useSelector(
+    (state: AppState) => state.PlayerStore
+  );
+
+  const dispatch = useDispatch();
+  const { minimize } = useDynamicPlayer();
+
+  const onTrackPress = useCallback(() => {
+    dispatch(
+      playerAction.loadSource({
+        id: props.id,
+        title: props.name,
+        label: props.artistName,
+        uri: props.uri,
+        coverPhoto: props.images[0].url ?? "",
+      })
+    );
+    dispatch(playerAction.setActive(true));
+    dispatch(playerAction.isPlaying(true)); // auto play when pressed
+    minimize();
+  }, [props, dispatch]);
+
+  const isTrackPlaying = useMemo(() => {
+    return source && source.id === props.id && isPlaying;
+  }, [source, props.id, isPlaying]);
+
+  const _showPlaying = useDerivedValue(() => {
+    return isTrackPlaying ? 1 : 0;
+  }, [isTrackPlaying]);
+
+  const showPlayingAnimation = useAnimatedStyle(() => {
+    return {
+      width: withTiming(_showPlaying.value === 1 ? 30 : 0),
+    };
+  });
+
   return (
-    <UIPressable style={styles.container}>
+    <UIPressable style={styles.container} onPress={onTrackPress}>
       <View style={styles.rightContent}>
+        <Animated.View style={[styles.lottieBox, showPlayingAnimation]}>
+          {isTrackPlaying && (
+            <Animated.View
+              style={[styles.lottieContent]}
+              entering={FadeIn}
+              exiting={FadeOut}
+            >
+              <LottieView
+                autoPlay
+                style={{ height: 40, width: "auto" }}
+                source={require("../../../../assets/lottie/1ObMBFDYgb.json")}
+              />
+            </Animated.View>
+          )}
+        </Animated.View>
         <View style={styles.imageContainer}>
           <Image source={props.images[0].url} style={{ flex: 1 }} />
         </View>
         <View style={styles.textContainer}>
-          <UIText level="body" style={styles.name}>
+          <UIText
+            level="body"
+            style={[styles.name, isTrackPlaying && styles.nameActive]}
+          >
             {props.name}
           </UIText>
           <UIText level="caption" style={styles.metadata}>
@@ -71,11 +138,30 @@ const useStyles = () => {
       fontWeight: "600",
       fontSize: 16,
     },
+    nameActive: {
+      color: scheme.primary,
+    },
     metadata: {
       color: scheme.systemGray2,
     },
     iconTint: {
       color: scheme.systemGray2,
+    },
+    lottieBox: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      height: 60,
+      width: 0,
+      marginRight: -10,
+    },
+    lottieContent: {
+      position: "absolute",
+      left: -10,
+      flexDirection: "row",
+      alignItems: "center",
+      width: "auto",
+      height: 60,
     },
   });
 };
