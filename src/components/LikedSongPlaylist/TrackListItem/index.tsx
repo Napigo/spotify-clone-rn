@@ -12,11 +12,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { playerAction } from "../../../redux/stores/player.store";
 import { useDynamicPlayer } from "../../DynamicPlayer";
 import { AppState } from "../../../redux/app-store";
+import LottieView from "lottie-react-native";
+import Animated, {
+  FadeIn,
+  FadeOut,
+  useAnimatedStyle,
+  useDerivedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 const Component: React.FC<SavedTrack> = (props) => {
   const styles = useStyles();
 
-  const source = useSelector((state: AppState) => state.PlayerStore.source);
+  const { source, isPlaying } = useSelector(
+    (state: AppState) => state.PlayerStore
+  );
+
   const dispatch = useDispatch();
   const { minimize } = useDynamicPlayer();
 
@@ -36,12 +47,37 @@ const Component: React.FC<SavedTrack> = (props) => {
   }, [props, dispatch]);
 
   const isTrackPlaying = useMemo(() => {
-    return source && source.id === props.id;
-  }, [source, props.id]);
+    return source && source.id === props.id && isPlaying;
+  }, [source, props.id, isPlaying]);
+
+  const _showPlaying = useDerivedValue(() => {
+    return isTrackPlaying ? 1 : 0;
+  }, [isTrackPlaying]);
+
+  const showPlayingAnimation = useAnimatedStyle(() => {
+    return {
+      width: withTiming(_showPlaying.value === 1 ? 30 : 0),
+    };
+  });
 
   return (
     <UIPressable style={styles.container} onPress={onTrackPress}>
       <View style={styles.rightContent}>
+        <Animated.View style={[styles.lottieBox, showPlayingAnimation]}>
+          {isTrackPlaying && (
+            <Animated.View
+              style={[styles.lottieContent]}
+              entering={FadeIn}
+              exiting={FadeOut}
+            >
+              <LottieView
+                autoPlay
+                style={{ height: 40, width: "auto" }}
+                source={require("../../../../assets/lottie/1ObMBFDYgb.json")}
+              />
+            </Animated.View>
+          )}
+        </Animated.View>
         <View style={styles.imageContainer}>
           <Image source={props.images[0].url} style={{ flex: 1 }} />
         </View>
@@ -110,6 +146,22 @@ const useStyles = () => {
     },
     iconTint: {
       color: scheme.systemGray2,
+    },
+    lottieBox: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      height: 60,
+      width: 0,
+      marginRight: -10,
+    },
+    lottieContent: {
+      position: "absolute",
+      left: -10,
+      flexDirection: "row",
+      alignItems: "center",
+      width: "auto",
+      height: 60,
     },
   });
 };
