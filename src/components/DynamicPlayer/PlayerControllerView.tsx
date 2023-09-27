@@ -6,6 +6,8 @@ import {
   FULL_BOTTOM_BAR_HEIGHT,
   SCREEN_EDGE_SPACING,
   SCREEN_HEIGHT,
+  SCREEN_WIDTH,
+  STANDARD_TOPBAR_HEIGHT,
 } from "../../theme/constants";
 import { UIPressable } from "../common/UIPressable";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
@@ -23,6 +25,8 @@ import { UIText } from "../common/UIText";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../../redux/app-store";
 import { playerAction } from "../../redux/stores/player.store";
+import { borderRadius } from "../../theme/radius";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type PlayerControllerViewProps = {
   tabbar: React.ReactElement;
@@ -36,6 +40,7 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
 }) => {
   const styles = useStyles();
   const { scheme } = useThemeColors();
+  const offset = useSafeAreaInsets();
 
   const {
     source,
@@ -68,14 +73,51 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
     };
   });
 
-  const trackDominantColor = darkenColor(dominantColor ?? "#292929", 0.5);
+  const coverImageAnimated = useAnimatedStyle(() => {
+    const smallSize = DYNAMIC_BOTTOM_PLAYER_HEIGHT - 20;
+    const fullSize = SCREEN_WIDTH - SCREEN_EDGE_SPACING - SCREEN_EDGE_SPACING;
+    return {
+      width: interpolate(
+        animatedIndex.value,
+        [0, 1, 2],
+        [smallSize, smallSize, fullSize]
+      ),
+      height: interpolate(
+        animatedIndex.value,
+        [0, 1, 2],
+        [smallSize, smallSize, fullSize]
+      ),
+      borderRadius: interpolate(
+        animatedIndex.value,
+        [0, 1, 2],
+        [0, 0, borderRadius.md]
+      ),
+      transform: [
+        {
+          translateY: interpolate(animatedIndex.value, [0, 1, 2], [0, 0, 280]),
+        },
+      ],
+    };
+  });
+
+  const trackDominantColor = darkenColor(dominantColor ?? "#292929", 0.8);
   const backgroundAnimated = useAnimatedStyle(() => {
     return {
       backgroundColor: interpolateColor(
         animatedIndex.value,
         [0, 1, 2],
-        [scheme.systemBackground, scheme.systemBackground, trackDominantColor]
+        [
+          scheme.secondaryBackground,
+          scheme.secondaryBackground,
+          trackDominantColor,
+        ]
       ),
+    };
+  });
+
+  const trackTextualAnimated = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(animatedIndex.value, [0, 1, 1.5], [1, 1, 0]),
     };
   });
 
@@ -87,30 +129,51 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
     dispatch(playerAction.isPlaying(!trackPlaying));
   }, [trackPlaying]);
 
+  const topbarAnimated = useAnimatedStyle(() => {
+    return {
+      top: interpolate(
+        animatedIndex.value,
+        [0, 1, 2],
+        [STANDARD_TOPBAR_HEIGHT, STANDARD_TOPBAR_HEIGHT, offset.top]
+      ),
+      opacity: interpolate(animatedIndex.value, [0, 1.8, 2], [0, 0, 1]),
+    };
+  });
+
   return (
     <>
       <Animated.View style={[styles.playerContainer, backgroundAnimated]}>
+        <Animated.View style={[styles.topBar, topbarAnimated]}>
+          <UIPressable onPress={() => {}}>
+            <Ionicons name="chevron-back" size={23} color={"white"} />
+          </UIPressable>
+
+          <UIPressable onPress={() => {}}>
+            <Ionicons name="ellipsis-vertical" size={23} color={"white"} />
+          </UIPressable>
+        </Animated.View>
+
         <UIPressable style={styles.minimizeContainer} onPress={openFull}>
           <View style={styles.songDataBox}>
             {assets && (
-              <View style={styles.songImage}>
+              <Animated.View style={[styles.songImage, coverImageAnimated]}>
                 <Image
                   source={source?.coverPhoto ?? assets[0].uri}
                   contentFit="cover"
                   style={{ flex: 1 }}
                 />
-              </View>
+              </Animated.View>
             )}
-            <View style={styles.textualBox}>
+            <Animated.View style={[styles.textualBox, trackTextualAnimated]}>
               <UIText level="subhead" style={styles.songTitle}>
                 {source?.title}
               </UIText>
               <UIText level="caption" style={styles.artistName}>
                 {source?.label}
               </UIText>
-            </View>
+            </Animated.View>
           </View>
-          <View style={styles.controlBox}>
+          <Animated.View style={[styles.controlBox, trackTextualAnimated]}>
             <UIPressable style={styles.controlButton} onPress={closePlayer}>
               <MaterialIcons
                 name="speaker-group"
@@ -125,7 +188,7 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
                 <Ionicons name="play" size={23} color={scheme.systemTint} />
               )}
             </UIPressable>
-          </View>
+          </Animated.View>
         </UIPressable>
       </Animated.View>
 
@@ -147,7 +210,6 @@ const useStyles = () => {
       height: DYNAMIC_BOTTOM_PLAYER_HEIGHT,
       width: "100%",
       flexDirection: "row",
-      // paddingHorizontal: SCREEN_EDGE_SPACING,
       alignItems: "center",
       justifyContent: "space-between",
     },
@@ -163,6 +225,7 @@ const useStyles = () => {
     songImage: {
       height: DYNAMIC_BOTTOM_PLAYER_HEIGHT - 20,
       aspectRatio: 1,
+      overflow: "hidden",
     },
     songDataBox: {
       height: "100%",
@@ -191,11 +254,20 @@ const useStyles = () => {
       color: scheme.systemGray2,
     },
     controlButton: {
-      // backgroundColor: "blue",
       height: "100%",
       aspectRatio: 0.8,
       alignItems: "center",
       justifyContent: "center",
+    },
+    topBar: {
+      position: "absolute",
+      zIndex: -100,
+      width: SCREEN_WIDTH,
+      height: STANDARD_TOPBAR_HEIGHT * 0.8,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingHorizontal: SCREEN_EDGE_SPACING,
     },
   });
 };

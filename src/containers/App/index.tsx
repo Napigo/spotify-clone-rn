@@ -32,6 +32,7 @@ import { SearchViewController } from "../../views/Search/SearchViewController";
 import { SavedTracksController } from "../../views/Library/SavedTracksController";
 import { UserPlaylistController } from "../../views/Library/UserPlaylistsController";
 import { LibraryController } from "../../views/Library/LibraryController";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 /**
  * This component initialize all data required
@@ -203,12 +204,12 @@ export const AppContainer: React.FC<PropsWithChildren> = ({ children }) => {
     return null;
   }
   return (
-    <>
+    <SafeAreaProvider>
       <SearchViewController />
       <SavedTracksController />
       <LibraryController />
       <UserPlaylistController />
       {children}
-    </>
+    </SafeAreaProvider>
   );
 };
