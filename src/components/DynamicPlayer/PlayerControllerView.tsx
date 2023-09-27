@@ -39,8 +39,8 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
 
   const {
     source,
-    active,
     isPlaying: trackPlaying,
+    dominantColor,
   } = useSelector((state: AppState) => state.PlayerStore);
 
   const { close: closePlayer, openFull } = useDynamicPlayer();
@@ -68,14 +68,13 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
     };
   });
 
-  const c = darkenColor("#BA5D08", 0.5);
-
+  const trackDominantColor = darkenColor(dominantColor ?? "#292929", 0.5);
   const backgroundAnimated = useAnimatedStyle(() => {
     return {
       backgroundColor: interpolateColor(
         animatedIndex.value,
         [0, 1, 2],
-        [scheme.systemBackground, scheme.systemBackground, c]
+        [scheme.systemBackground, scheme.systemBackground, trackDominantColor]
       ),
     };
   });

@@ -1,3 +1,5 @@
+import constants from "expo-constants";
+
 export function isStringifiedJSON(value: string) {
   try {
     const parsedValue = JSON.parse(value);
@@ -63,4 +65,25 @@ export function darkenColor(hex: string, factor: number) {
     newB.toString(16).padStart(2, "0");
 
   return newHex;
+}
+
+export async function generateDominantColor(colorHex: string) {
+  let dominantColor = "#292929"; // fallback color
+  try {
+    // will only works when on dev-client build, will not work for expo-go
+    if (constants.appOwnership === "expo") {
+      return dominantColor;
+    }
+    const colorModule = require("react-native-image-colors");
+    const rawColors = await colorModule.getColors(colorHex);
+    if (rawColors.platform === "ios") {
+      dominantColor = rawColors.detail;
+    } else if (rawColors.platform === "android") {
+      dominantColor = rawColors.dominant;
+    }
+
+    return dominantColor;
+  } catch (err) {
+    return dominantColor;
+  }
 }

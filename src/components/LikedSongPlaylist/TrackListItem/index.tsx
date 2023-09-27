@@ -20,6 +20,7 @@ import Animated, {
   useDerivedValue,
   withTiming,
 } from "react-native-reanimated";
+import { generateDominantColor } from "../../../utils/utils";
 
 const Component: React.FC<SavedTrack> = (props) => {
   const styles = useStyles();
@@ -31,7 +32,7 @@ const Component: React.FC<SavedTrack> = (props) => {
   const dispatch = useDispatch();
   const { minimize } = useDynamicPlayer();
 
-  const onTrackPress = useCallback(() => {
+  const onTrackPress = useCallback(async () => {
     dispatch(
       playerAction.loadSource({
         id: props.id,
@@ -43,6 +44,18 @@ const Component: React.FC<SavedTrack> = (props) => {
     );
     dispatch(playerAction.setActive(true));
     dispatch(playerAction.isPlaying(true)); // auto play when pressed
+
+    /**
+     * generate the prominant color background from the
+     * cover image and set into the redux store
+     */
+    const imageUrl = props.images[0].url;
+    const dominantColor = await generateDominantColor(imageUrl);
+    dispatch(playerAction.setDominantColor(dominantColor));
+
+    /**
+     * Finally display the bottom sheet (player) on minimize state
+     */
     minimize();
   }, [props, dispatch]);
 

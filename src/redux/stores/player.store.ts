@@ -4,7 +4,7 @@ interface PlayerState {
   active: boolean;
   isPlaying?: boolean;
   trackSeed?: number;
-  dominanceColor?: string;
+  dominantColor?: string;
   source: TrackSource | null;
 }
 
@@ -20,7 +20,7 @@ export const initialState: PlayerState = {
   active: false,
   isPlaying: false,
   trackSeed: 0,
-  dominanceColor: "",
+  dominantColor: "",
   source: null,
 };
 
@@ -29,6 +29,7 @@ const isPlaying = createAction<boolean>("player/is-playing");
 const updateTrackSeed = createAction<number>("player/update-track-seed");
 const loadSource = createAction<TrackSource>("player/load-source");
 const clearPlayer = createAction<void>("player/clear-player");
+const setDominantColor = createAction<string>("player/set-dominant-color");
 
 const reducer = createReducer<PlayerState>(initialState, (build) => {
   build.addCase(setActive, (state, action) => {
@@ -61,6 +62,15 @@ const reducer = createReducer<PlayerState>(initialState, (build) => {
       }
     );
   });
+  build.addCase(setDominantColor, (state, action) => {
+    return Object.assign(
+      state,
+      {},
+      {
+        dominantColor: action.payload,
+      }
+    );
+  });
   build.addCase(clearPlayer, () => initialState);
 });
 
@@ -70,6 +80,7 @@ export const playerAction = {
   updateTrackSeed,
   loadSource,
   clearPlayer,
+  setDominantColor,
 };
 
 export default reducer;
