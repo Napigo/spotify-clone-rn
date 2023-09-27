@@ -27,6 +27,16 @@ import { AppState } from "../../redux/app-store";
 import { playerAction } from "../../redux/stores/player.store";
 import { borderRadius } from "../../theme/radius";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { PlayerGroupButton } from "./PlayerGroupButton";
+
+const MINI_IMAGE_COVER_SIZE =
+  DYNAMIC_BOTTOM_PLAYER_HEIGHT - SCREEN_EDGE_SPACING;
+const LARGE_IMAGE_COVER_SIZE =
+  SCREEN_WIDTH - SCREEN_EDGE_SPACING - SCREEN_EDGE_SPACING;
+
+const TOP_BAR_HEIGHT = STANDARD_TOPBAR_HEIGHT * 0.8;
+
+const LARGE_PLAYER_CONTROL_BOX_SIZE = 300;
 
 type PlayerControllerViewProps = {
   tabbar: React.ReactElement;
@@ -41,6 +51,7 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
   const styles = useStyles();
   const { scheme } = useThemeColors();
   const offset = useSafeAreaInsets();
+  const { minimize } = useDynamicPlayer();
 
   const {
     source,
@@ -74,18 +85,16 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
   });
 
   const coverImageAnimated = useAnimatedStyle(() => {
-    const smallSize = DYNAMIC_BOTTOM_PLAYER_HEIGHT - 20;
-    const fullSize = SCREEN_WIDTH - SCREEN_EDGE_SPACING - SCREEN_EDGE_SPACING;
     return {
       width: interpolate(
         animatedIndex.value,
         [0, 1, 2],
-        [smallSize, smallSize, fullSize]
+        [MINI_IMAGE_COVER_SIZE, MINI_IMAGE_COVER_SIZE, LARGE_IMAGE_COVER_SIZE]
       ),
       height: interpolate(
         animatedIndex.value,
         [0, 1, 2],
-        [smallSize, smallSize, fullSize]
+        [MINI_IMAGE_COVER_SIZE, MINI_IMAGE_COVER_SIZE, LARGE_IMAGE_COVER_SIZE]
       ),
       borderRadius: interpolate(
         animatedIndex.value,
@@ -94,7 +103,17 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
       ),
       transform: [
         {
-          translateY: interpolate(animatedIndex.value, [0, 1, 2], [0, 0, 280]),
+          translateY: interpolate(
+            animatedIndex.value,
+            [0, 1, 2],
+            [
+              0,
+              0,
+              (LARGE_IMAGE_COVER_SIZE - DYNAMIC_BOTTOM_PLAYER_HEIGHT) / 2 +
+                DYNAMIC_BOTTOM_PLAYER_HEIGHT +
+                STANDARD_TOPBAR_HEIGHT * 0.8,
+            ]
+          ),
         },
       ],
     };
@@ -140,12 +159,33 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
     };
   });
 
+  const largePlayerControlContainerAnimated = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(animatedIndex.value, [0, 1.5, 2], [0, 0, 1]),
+      top: interpolate(
+        animatedIndex.value,
+        [0, 1, 2],
+        [
+          50,
+          50,
+          TOP_BAR_HEIGHT +
+            STANDARD_TOPBAR_HEIGHT +
+            LARGE_IMAGE_COVER_SIZE * 1.05,
+        ]
+      ),
+    };
+  });
+
   return (
     <>
       <Animated.View style={[styles.playerContainer, backgroundAnimated]}>
         <Animated.View style={[styles.topBar, topbarAnimated]}>
-          <UIPressable onPress={() => {}}>
-            <Ionicons name="chevron-back" size={23} color={"white"} />
+          <UIPressable
+            onPress={() => {
+              minimize();
+            }}
+          >
+            <Ionicons name="chevron-down" size={23} color={"white"} />
           </UIPressable>
 
           <UIPressable onPress={() => {}}>
@@ -164,6 +204,20 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
                 />
               </Animated.View>
             )}
+            <Animated.View
+              style={[
+                styles.largePlayerControlBox,
+                largePlayerControlContainerAnimated,
+              ]}
+            >
+              <UIText level="title2" style={styles.largeTitle}>
+                {source?.title}
+              </UIText>
+              <UIText level="body" style={styles.largeLabel}>
+                {source?.label}
+              </UIText>
+              <PlayerGroupButton dominantColor={dominantColor} />
+            </Animated.View>
             <Animated.View style={[styles.textualBox, trackTextualAnimated]}>
               <UIText level="subhead" style={styles.songTitle}>
                 {source?.title}
@@ -191,7 +245,6 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
           </Animated.View>
         </UIPressable>
       </Animated.View>
-
       <Animated.View style={[styles.bottomBarContainer, bottomBarAnimated]}>
         {tabbar}
       </Animated.View>
@@ -226,6 +279,7 @@ const useStyles = () => {
       height: DYNAMIC_BOTTOM_PLAYER_HEIGHT - 20,
       aspectRatio: 1,
       overflow: "hidden",
+      backgroundColor: "pink",
     },
     songDataBox: {
       height: "100%",
@@ -263,11 +317,26 @@ const useStyles = () => {
       position: "absolute",
       zIndex: -100,
       width: SCREEN_WIDTH,
-      height: STANDARD_TOPBAR_HEIGHT * 0.8,
+      height: TOP_BAR_HEIGHT,
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
       paddingHorizontal: SCREEN_EDGE_SPACING,
+    },
+    largePlayerControlBox: {
+      position: "absolute",
+      width: SCREEN_WIDTH,
+      height: LARGE_PLAYER_CONTROL_BOX_SIZE,
+      paddingHorizontal: SCREEN_EDGE_SPACING,
+      flexDirection: "column",
+      gap: 1,
+    },
+    largeTitle: {
+      fontWeight: "700",
+    },
+    largeLabel: {
+      fontWeight: "500",
+      color: scheme.systemGray2,
     },
   });
 };

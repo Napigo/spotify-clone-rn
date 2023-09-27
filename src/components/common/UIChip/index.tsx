@@ -1,5 +1,5 @@
 import React from "react";
-import { PressableProps, StyleSheet } from "react-native";
+import { PressableProps, StyleSheet, ViewStyle } from "react-native";
 import { UIPressable } from "../UIPressable";
 import Animated, {
   useAnimatedStyle,
@@ -11,8 +11,18 @@ import { useThemeColors } from "../../../theme/ThemeProvider";
 import { UIText } from "../UIText";
 import { SCREEN_EDGE_SPACING } from "../../../theme/constants";
 
-interface UIChipProps extends PressableProps {}
-export const UIChip: React.FC<UIChipProps> = ({ children, ...props }) => {
+interface UIChipProps extends PressableProps {
+  buttonStyle?: ViewStyle;
+  icon?: React.ReactElement;
+  iconOnly?: boolean;
+}
+export const UIChip: React.FC<UIChipProps> = ({
+  children,
+  buttonStyle,
+  icon,
+  iconOnly = false,
+  ...props
+}) => {
   const styles = useStyles();
   const touched = useSharedValue(false);
 
@@ -27,14 +37,16 @@ export const UIChip: React.FC<UIChipProps> = ({ children, ...props }) => {
   return (
     <Animated.View style={[stylez]}>
       <UIPressable
-        style={styles.container}
+        style={[styles.container, buttonStyle, { gap: iconOnly ? 0 : 5 }]}
         onTouchStart={() => {
           touched.value = true;
         }}
         onTouchEnd={() => {
           touched.value = false;
         }}
+        {...props}
       >
+        {icon}
         <UIText level="caption">{children as string}</UIText>
       </UIPressable>
     </Animated.View>
@@ -51,6 +63,7 @@ const useStyles = () => {
       backgroundColor: scheme.secondaryBackground,
       paddingHorizontal: SCREEN_EDGE_SPACING,
       height: 36,
+      flexDirection: "row",
     },
   });
 };
