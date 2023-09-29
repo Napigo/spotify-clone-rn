@@ -40,6 +40,7 @@ const Component: React.FC<SavedTrack> = (props) => {
         label: props.artistName,
         uri: props.uri,
         coverPhoto: props.images[0].url ?? "",
+        duration_ms: props.duration_ms,
       })
     );
     dispatch(playerAction.setActive(true));

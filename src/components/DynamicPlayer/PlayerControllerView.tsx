@@ -219,8 +219,8 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
                 {source?.label}
               </UIText>
               <PlayerGroupButton dominantColor={dominantColor} />
-              <PlayerControls />
               <PlayerTrackSlider />
+              <PlayerControls />
             </Animated.View>
             <Animated.View style={[styles.textualBox, trackTextualAnimated]}>
               <UIText level="subhead" style={styles.songTitle}>

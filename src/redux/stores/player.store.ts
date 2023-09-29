@@ -14,6 +14,7 @@ export interface TrackSource {
   label: string;
   uri: string;
   coverPhoto: string;
+  duration_ms: number;
 }
 
 export const initialState: PlayerState = {

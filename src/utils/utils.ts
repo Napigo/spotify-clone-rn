@@ -87,3 +87,20 @@ export async function generateDominantColor(colorHex: string) {
     return dominantColor;
   }
 }
+
+export function msToTime(duration: number) {
+  const seconds = Math.floor((duration / 1000) % 60);
+  const minutes = Math.floor((duration / (1000 * 60)) % 60);
+  const hours = Math.floor(duration / (1000 * 60 * 60));
+
+  if (hours > 0) {
+    return `${hours}:${String(minutes).padStart(2, "0")}:${String(
+      seconds
+    ).padStart(2, "0")}`;
+  } else {
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
+      2,
+      "0"
+    )}`;
+  }
+}

@@ -8,6 +8,7 @@ export interface SavedTrack {
   artistName: string;
   albumName: string;
   uri: string;
+  duration_ms: number;
 }
 interface SavedTracksState {
   isReady: boolean;
