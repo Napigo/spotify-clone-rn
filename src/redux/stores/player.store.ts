@@ -3,7 +3,7 @@ import { createReducer, createAction } from "@reduxjs/toolkit";
 interface PlayerState {
   active: boolean;
   isPlaying?: boolean;
-  trackSeed?: number;
+  trackSeed: number;
   dominantColor?: string;
   source: TrackSource | null;
 }

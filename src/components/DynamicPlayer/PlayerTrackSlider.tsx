@@ -72,7 +72,6 @@ const useStyles = () => {
       alignItems: "flex-start",
       height: 30,
       justifyContent: "space-between",
-      //   backgroundColor: "pink",
     },
   });
 };
