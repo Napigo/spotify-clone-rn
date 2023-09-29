@@ -14,8 +14,11 @@ type RenderItemProps = {
 export const FeaturedPlaylist: React.FC = () => {
   const styles = useStyles();
 
-  const { isReady, playlists } = useSelector(
-    (state: AppState) => state.FeaturedPlaylistsStore
+  const isReady = useSelector(
+    (state: AppState) => state.FeaturedPlaylistsStore.isReady
+  );
+  const playlists = useSelector(
+    (state: AppState) => state.FeaturedPlaylistsStore.playlists
   );
 
   if (!isReady) {

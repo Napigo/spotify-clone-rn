@@ -25,8 +25,9 @@ import { generateDominantColor } from "../../../utils/utils";
 const Component: React.FC<SavedTrack> = (props) => {
   const styles = useStyles();
 
-  const { source, isPlaying } = useSelector(
-    (state: AppState) => state.PlayerStore
+  const source = useSelector((state: AppState) => state.PlayerStore.source);
+  const isPlaying = useSelector(
+    (state: AppState) => state.PlayerStore.isPlaying
   );
 
   const dispatch = useDispatch();
