@@ -9,7 +9,10 @@ import { playerAction } from "../../redux/stores/player.store";
 
 export const PlayerControls: React.FC = () => {
   const styles = useStyles();
-  const { isPlaying } = useSelector((state: AppState) => state.PlayerStore);
+  const isPlaying = useSelector(
+    (state: AppState) => state.PlayerStore.isPlaying
+  );
+
   const dispatch = useDispatch();
 
   const togglePlay = useCallback(() => {

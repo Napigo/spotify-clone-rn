@@ -13,10 +13,14 @@ let seekInterval: NodeJS.Timeout | undefined;
 export const PlayerTrackSlider: React.FC = () => {
   const styles = useStyles();
   const { scheme } = useThemeColors();
-  const { source, isPlaying } = useSelector(
-    (state: AppState) => state.PlayerStore
-  );
+
+  const source = useSelector((state: AppState) => state.PlayerStore.source);
   const [seek, setSeek] = useState<number>(0);
+
+  const isPlaying = useSelector(
+    (state: AppState) => state.PlayerStore.isPlaying
+  );
+
   const maxSeek = source?.duration_ms ?? 1000;
 
   const seekRef = useRef(seek);

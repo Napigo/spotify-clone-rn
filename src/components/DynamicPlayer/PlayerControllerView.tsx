@@ -38,8 +38,6 @@ const LARGE_IMAGE_COVER_SIZE =
 
 const TOP_BAR_HEIGHT = STANDARD_TOPBAR_HEIGHT * 0.8;
 
-const LARGE_PLAYER_CONTROL_BOX_SIZE = 300;
-
 type PlayerControllerViewProps = {
   tabbar: React.ReactElement;
 };
@@ -55,11 +53,13 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
   const offset = useSafeAreaInsets();
   const { minimize } = useDynamicPlayer();
 
-  const {
-    source,
-    isPlaying: trackPlaying,
-    dominantColor,
-  } = useSelector((state: AppState) => state.PlayerStore);
+  const source = useSelector((state: AppState) => state.PlayerStore.source);
+  const trackPlaying = useSelector(
+    (state: AppState) => state.PlayerStore.isPlaying
+  );
+  const dominantColor = useSelector(
+    (state: AppState) => state.PlayerStore.dominantColor
+  );
 
   const { close: closePlayer, openFull } = useDynamicPlayer();
 

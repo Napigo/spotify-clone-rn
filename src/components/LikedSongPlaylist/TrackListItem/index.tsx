@@ -58,7 +58,7 @@ const Component: React.FC<SavedTrack> = (props) => {
      * Finally display the bottom sheet (player) on minimize state
      */
     minimize();
-  }, [props, dispatch]);
+  }, [props]);
 
   const isTrackPlaying = useMemo(() => {
     return source && source.id === props.id && isPlaying;
