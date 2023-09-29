@@ -28,6 +28,8 @@ import { playerAction } from "../../redux/stores/player.store";
 import { borderRadius } from "../../theme/radius";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { PlayerGroupButton } from "./PlayerGroupButton";
+import { PlayerControls } from "./PlayerControls";
+import { PlayerTrackSlider } from "./PlayerTrackSlider";
 
 const MINI_IMAGE_COVER_SIZE =
   DYNAMIC_BOTTOM_PLAYER_HEIGHT - SCREEN_EDGE_SPACING;
@@ -217,6 +219,8 @@ export const PlayerControllerView: React.FC<PlayerControllerViewProps> = ({
                 {source?.label}
               </UIText>
               <PlayerGroupButton dominantColor={dominantColor} />
+              <PlayerControls />
+              <PlayerTrackSlider />
             </Animated.View>
             <Animated.View style={[styles.textualBox, trackTextualAnimated]}>
               <UIText level="subhead" style={styles.songTitle}>
@@ -326,7 +330,6 @@ const useStyles = () => {
     largePlayerControlBox: {
       position: "absolute",
       width: SCREEN_WIDTH,
-      height: LARGE_PLAYER_CONTROL_BOX_SIZE,
       paddingHorizontal: SCREEN_EDGE_SPACING,
       flexDirection: "column",
       gap: 1,
